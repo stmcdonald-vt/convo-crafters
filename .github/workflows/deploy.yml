@@ -5,11 +5,11 @@ name: Deploy to Slack Cloud
 
 on:
   push:
-    tags: [ '*.*.*' ]
+    tags: [ main ]
 
 jobs:
   deploy:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Set up repo
