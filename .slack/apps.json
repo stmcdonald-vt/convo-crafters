@@ -1,0 +1,11 @@
+{
+  "apps": {
+    "T06F32XEJVC": {
+      "app_id": "A06KZ23UJUR",
+      "IsDev": false,
+      "team_domain": "cs5934",
+      "team_id": "T06F32XEJVC"
+    }
+  },
+  "default": "cs5934"
+}
