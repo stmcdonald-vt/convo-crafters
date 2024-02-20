@@ -8,17 +8,40 @@ import SampleObjectDatastore from "./datastores/sample_datastore.ts";
  * https://api.slack.com/automation/manifest
  */
 export default Manifest({
-  name: "convo-crafters",
-  description: "A template for building Slack apps with Deno",
-  icon: "assets/default_new_app_icon.png",
+  // This is the app's internal name.
+  name: "Convo-Crafter",
+
+  // App description the helps users decide whether to us it.
+  description: "A Slack bot that facilitates meeting functions and flow",
+
+  // The app's profile picture that will appear in the Slack client.
+  icon: "assets/VT_logo.png",
+
+  // A list of all workflows the app will use.
   workflows: [SampleWorkflow],
+
+  // If your app communicates to any external domains, list them here.
   outgoingDomains: [],
+
+  // A list of all Datastores the app will use
   datastores: [SampleObjectDatastore],
+
+  /**
+   * Defines the scope of the bot's permissions/abilities.
+   * View the following for more info:
+   * https://api.slack.com/scopes?filter=granular_bot
+   */
   botScopes: [
-    "commands",
-    "chat:write",
-    "chat:write.public",
+    "calls:read", // View information about ongoing and past calls
+    "calls:write", // Start and manage calls in a workspace
+    "commands", // Add shortcuts and/or slash commands that people can use
+    "channels:read", // View basic information about public channels in a workspace
+    "chat:write", // Post messages in approved channels & conversations
+    "chat:write.public", // Send messages to channels @your_slack_app isn't a member of
+    "chat:write.customize", // Send messages as @your_slack_app
     "datastore:read",
     "datastore:write",
+    "triggers:write", // Create new Platform triggers
+    "triggers:read", // Read new Platform triggers
   ],
 });
