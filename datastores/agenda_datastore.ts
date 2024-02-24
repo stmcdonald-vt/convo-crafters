@@ -21,7 +21,7 @@ const AgendaDatastore = DefineDatastore({
       },
     },
     isRecurring: {
-      type: Schema.types.boolean
+      type: Schema.types.boolean,
     },
   },
 });
