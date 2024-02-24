@@ -11,11 +11,13 @@ const AgendaDatastore = DefineDatastore({
       type: Schema.slack.types.date,
     },
     topics: {
+      type: Schema.types.array,
       items: {
         type: Schema.types.string,
       },
     },
     topics_status: {
+      type: Schema.types.array,
       items: {
         type: Schema.types.string,
       },
