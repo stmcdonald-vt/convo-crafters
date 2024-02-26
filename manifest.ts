@@ -1,8 +1,11 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
-import SampleWorkflow from "./workflows/sample_workflow.ts";
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import ActionListDatastore from "./datastores/action_list_datastore.ts";
 import AgendaDatastore from "./datastores/agenda_datastore.ts";
+import {CreateAgenda} from "./workflows/create_agenda";
+import {CreateMeeting} from "./workflows/create_meeting";
+import {CreatePoll} from "./workflows/create_poll";
+import {CreateReminder} from "./workflows/create_reminder";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -17,10 +20,10 @@ export default Manifest({
   description: "A Slack bot that facilitates meeting functions and flow",
 
   // The app's profile picture that will appear in the Slack client.
-  icon: "assets/VT_logo.png",
+  icon: "assets/robot_logo.png",
 
   // A list of all workflows the app will use.
-  workflows: [SampleWorkflow],
+  workflows: [CreateAgenda, CreateMeeting, CreatePoll, CreateReminder],
 
   // If your app communicates to any external domains, list them here.
   outgoingDomains: [],
@@ -29,7 +32,7 @@ export default Manifest({
   datastores: [SampleObjectDatastore, ActionListDatastore, AgendaDatastore],
 
   /**
-   * Defines the scope of the bot's permissions/abilities.
+   * Defines the scope of Convo Crafter's permissions/abilities.
    * View the following for more info:
    * https://api.slack.com/scopes?filter=granular_bot
    */
