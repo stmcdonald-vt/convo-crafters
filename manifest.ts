@@ -1,6 +1,8 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
 import SampleWorkflow from "./workflows/sample_workflow.ts";
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
+import ActionListDatastore from "./datastores/action_list_datastore.ts";
+import AgendaDatastore from "./datastores/agenda_datastore.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -24,7 +26,7 @@ export default Manifest({
   outgoingDomains: [],
 
   // A list of all Datastores the app will use
-  datastores: [SampleObjectDatastore],
+  datastores: [SampleObjectDatastore, ActionListDatastore, AgendaDatastore],
 
   /**
    * Defines the scope of the bot's permissions/abilities.
