@@ -26,7 +26,7 @@ const SetupWorkflowForm = CreateReminderWorkflow.addStep(
     description: ":wave: Create a meeting reminder.",
     interactivity: CreateReminderWorkflow.inputs.interactivity,
     fields: {
-      required: ["channel"],
+      required: ["channel", "date"],
       elements: [
         {
           name: "channel",
@@ -38,7 +38,6 @@ const SetupWorkflowForm = CreateReminderWorkflow.addStep(
           name: "date",
           title: "Select a time to send the meeting reminder",
           type: Schema.slack.types.timestamp,
-          default: "now",
         },
         {
           name: "messageInput",
@@ -66,14 +65,14 @@ CreateReminderWorkflow.addStep(CreateReminderSetupFunction, {
 /**
  * This step uses the SendEphemeralMessage Slack function.
  * An ephemeral confirmation message will be sent to the user
- * creating the welcome message, after the user submits the above
+ * creating meeting reminder, after the user submits the above
  * form.
  */
-// CreateReminderWorkflow.addStep(Schema.slack.functions.SendEphemeralMessage, {
-//   channel_id: SetupWorkflowForm.outputs.fields.channel,
-//   user_id: CreateReminderWorkflow.inputs.interactivity.interactor.id,
-//   message:
-//     `Your meeting reminder for this channel was successfully created! :white_check_mark:`,
-// });
+CreateReminderWorkflow.addStep(Schema.slack.functions.SendEphemeralMessage, {
+  channel_id: SetupWorkflowForm.outputs.fields.channel,
+  user_id: CreateReminderWorkflow.inputs.interactivity.interactor.id,
+  message:
+    `Your meeting reminder for this channel was successfully created! :white_check_mark:`,
+});
 
 export default CreateReminderWorkflow;

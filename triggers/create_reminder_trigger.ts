@@ -3,7 +3,7 @@ import CreateReminderWorkflow from "../workflows/create_reminder.ts";
 import { TriggerContextData, TriggerTypes } from "deno-slack-api/mod.ts";
 
 /**
- * This link trigger prompts the MessageSetupWorkflow workflow.
+ * This link trigger prompts the CreateReminderWorkflow workflow.
  */
 const createReminderTrigger: Trigger<typeof CreateReminderWorkflow.definition> =
   {

@@ -28,7 +28,7 @@ export const CreateReminderSetupFunction = DefineFunction({
           "The user ID of the person who created the meeting reminder",
       },
     },
-    required: ["channel"],
+    required: ["channel", "date"],
   },
 });
 
@@ -55,16 +55,6 @@ export default SlackFunction(
     if (triggers.error) {
       return { error: `Failed to lookup existing triggers: ${triggers.error}` };
     }
-
-    // Create a new user_joined_channel trigger if none exist
-    // if (!triggers.exists) {
-    //   const newTrigger = await saveUserJoinedChannelTrigger(client, channel);
-    //   if (!newTrigger.ok) {
-    //     return {
-    //       error: `Failed to create welcome trigger: ${newTrigger.error}`,
-    //     };
-    //   }
-    // }
 
     return { outputs: {} };
   },
