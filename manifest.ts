@@ -1,5 +1,9 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
-import SampleWorkflow from "./workflows/sample_workflow.ts";
+// import SampleWorkflow from "./workflows/sample_workflow.ts";
+// create reminder stuff
+import CreateReminderWorkflow from "./workflows/create_reminder.ts";
+import { RemindersDatastore } from "./datastores/reminders.ts";
+// sample stuff
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import ActionListDatastore from "./datastores/action_list_datastore.ts";
 import AgendaDatastore from "./datastores/agenda_datastore.ts";
@@ -20,13 +24,18 @@ export default Manifest({
   icon: "assets/VT_logo.png",
 
   // A list of all workflows the app will use.
-  workflows: [SampleWorkflow],
+  workflows: [CreateReminderWorkflow],
 
   // If your app communicates to any external domains, list them here.
   outgoingDomains: [],
 
   // A list of all Datastores the app will use
-  datastores: [SampleObjectDatastore, ActionListDatastore, AgendaDatastore],
+  datastores: [
+    SampleObjectDatastore,
+    ActionListDatastore,
+    AgendaDatastore,
+    RemindersDatastore,
+  ],
 
   /**
    * Defines the scope of the bot's permissions/abilities.
