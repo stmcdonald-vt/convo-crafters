@@ -1,11 +1,15 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
+
+// create reminder stuff
+import {CreateReminder} from "./workflows/create_reminder";
+import {RemindersDatastore} from "./datastores/reminders.ts";
+// sample stuff
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import ActionListDatastore from "./datastores/action_list_datastore.ts";
 import AgendaDatastore from "./datastores/agenda_datastore.ts";
 import {CreateAgenda} from "./workflows/create_agenda";
 import {CreateMeeting} from "./workflows/create_meeting";
 import {CreatePoll} from "./workflows/create_poll";
-import {CreateReminder} from "./workflows/create_reminder";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -29,7 +33,12 @@ export default Manifest({
   outgoingDomains: [],
 
   // A list of all Datastores the app will use
-  datastores: [SampleObjectDatastore, ActionListDatastore, AgendaDatastore],
+  datastores: [
+    SampleObjectDatastore,
+    ActionListDatastore,
+    AgendaDatastore,
+    RemindersDatastore,
+  ],
 
   /**
    * Defines the scope of Convo Crafter's permissions/abilities.
