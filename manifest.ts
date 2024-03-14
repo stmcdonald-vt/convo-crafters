@@ -1,15 +1,15 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
 
 // create reminder stuff
-import { CreateReminder } from "./workflows/create_reminder";
+import { CreateReminder } from "./workflows/create_reminder.ts";
 import { RemindersDatastore } from "./datastores/reminders.ts";
 // sample stuff
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import ActionListDatastore from "./datastores/action_list_datastore.ts";
 import AgendaDatastore from "./datastores/agenda_datastore.ts";
-import { CreateAgenda } from "./workflows/create_agenda";
-import { CreateMeeting } from "./workflows/create_meeting";
-import { CreatePoll } from "./workflows/create_poll";
+import { CreateAgenda } from "./workflows/create_agenda.ts";
+import { CreateMeeting } from "./workflows/create_meeting.ts";
+import { CreatePoll } from "./workflows/create_poll.ts";
 
 /**
  * The app manifest contains the app's configuration. This
