@@ -1,7 +1,7 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { RemindersDatastore } from "../datastores/reminders.ts";
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
-import { CreateReminderWorkflow } from "../workflows/create_reminder.ts";
+import { SendReminderWorkflow } from "../workflows/send_reminder.ts";
 
 export const CreateReminderSetupFunction = DefineFunction({
   callback_id: "create_reminder_setup_function",
@@ -28,7 +28,7 @@ export const CreateReminderSetupFunction = DefineFunction({
           "The user ID of the person who created the meeting reminder",
       },
     },
-    required: ["channel", "date"],
+    required: ["channel", "date", "message", "author"],
   },
 });
 
@@ -70,11 +70,43 @@ export async function findMeetingReminderTrigger(
   }
   const joinedTriggers = allTriggers.triggers.filter((trigger) => (
     trigger.workflow.callback_id ===
-      CreateReminderWorkflow.definition.callback_id &&
+      SendReminderWorkflow.definition.callback_id &&
     trigger.channel_ids.includes(channel)
   ));
 
   // Return if any matching triggers were found
   const exists = joinedTriggers.length > 0;
   return { exists };
+}
+
+/**
+ * sendReminderChannelTrigger
+ *  creates a new event trigger
+ * for the "Send Reminder" workflow in a channel.
+ */
+export async function sendReminderChannelTrigger(
+  client: SlackAPIClient,
+  channel: string,
+): Promise<{ ok: boolean; error?: string }> {
+  const triggerResponse = await client.workflows.triggers.create<
+    typeof SendReminderWorkflow.definition
+  >({
+    type: "event",
+    name: "meeting reminder",
+    description: "Send a message when meeting reminder is set",
+    workflow: `#/workflows/${SendReminderWorkflow.definition.callback_id}`,
+    event: {
+      event_type: "slack#/events/channel_renamed",
+      channel_ids: [channel],
+    },
+    inputs: {
+      channel: { value: channel },
+      triggered_user: { value: "{{data.user_id}}" },
+    },
+  });
+
+  if (!triggerResponse.ok) {
+    return { ok: false, error: triggerResponse.error };
+  }
+  return { ok: true };
 }
