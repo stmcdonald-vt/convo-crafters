@@ -1,7 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateMeetingSetupFunction } from "../functions/create_meeting.ts";
 
-export const CreateMeetingWorkflow = DefineWorkflow({
+export const CreateMeeting = DefineWorkflow({
   callback_id: "create_meeting",
   title: "Create meeting",
   description: "Create a meeting",
@@ -18,13 +18,13 @@ export const CreateMeetingWorkflow = DefineWorkflow({
   },
 });
 
-const SetupWorkflowForm = CreateMeetingWorkflow.addStep(
+const SetupWorkflowForm = CreateMeeting.addStep(
   Schema.slack.functions.OpenForm,
   {
     title: "Create Meeting Form",
     submit_label: "Submit",
     description: ":wave: Create a meeting.",
-    interactivity: CreateMeetingWorkflow.inputs.interactivity,
+    interactivity: CreateMeeting.inputs.interactivity,
     fields: {
       required: ["channel", "date"],
       elements: [
@@ -32,7 +32,7 @@ const SetupWorkflowForm = CreateMeetingWorkflow.addStep(
           name: "channel",
           title: "Select a channel to create the meeting",
           type: Schema.slack.types.channel_id,
-          default: CreateMeetingWorkflow.inputs.channel,
+          default: CreateMeeting.inputs.channel,
         },
         {
           name: "date",
@@ -49,7 +49,7 @@ const SetupWorkflowForm = CreateMeetingWorkflow.addStep(
  * function which sets the welcome message up.
  * See `/functions/setup_function.ts` for more information.
  */
-CreateMeetingWorkflow.addStep(CreateMeetingSetupFunction, {
+CreateMeeting.addStep(CreateMeetingSetupFunction, {
   channel: SetupWorkflowForm.outputs.fields.channel,
   timestamp: SetupWorkflowForm.outputs.fields.date,
 });
@@ -60,11 +60,11 @@ CreateMeetingWorkflow.addStep(CreateMeetingSetupFunction, {
  * creating meeting meeting, after the user submits the above
  * form.
  */
-CreateMeetingWorkflow.addStep(Schema.slack.functions.SendEphemeralMessage, {
+CreateMeeting.addStep(Schema.slack.functions.SendEphemeralMessage, {
   channel_id: SetupWorkflowForm.outputs.fields.channel,
-  user_id: CreateMeetingWorkflow.inputs.interactivity.interactor.id,
+  user_id: CreateMeeting.inputs.interactivity.interactor.id,
   message:
     `Your meeting meeting for this channel was successfully created! :white_check_mark:`,
 });
 
-export default CreateMeetingWorkflow;
+export default CreateMeeting;

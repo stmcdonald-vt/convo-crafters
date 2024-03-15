@@ -1,14 +1,16 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
-// import SampleWorkflow from "./workflows/sample_workflow.ts";
+
 // create reminder stuff
-import CreateReminderWorkflow from "./workflows/create_reminder.ts";
+import { CreateReminder } from "./workflows/create_reminder.ts";
 import { RemindersDatastore } from "./datastores/reminders.ts";
 // sample stuff
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import ActionListDatastore from "./datastores/action_list_datastore.ts";
 import AgendaDatastore from "./datastores/agenda_datastore.ts";
 import { MeetingDatastore } from "./datastores/meeting_datastore.ts";
-import CreateMeetingWorkflow from "./workflows/create_meeting.ts";
+import { CreateMeeting } from "./workflows/create_meeting.ts";
+import { CreateAgenda } from "./workflows/create_agenda.ts";
+import { CreatePoll } from "./workflows/create_poll.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -23,10 +25,10 @@ export default Manifest({
   description: "A Slack bot that facilitates meeting functions and flow",
 
   // The app's profile picture that will appear in the Slack client.
-  icon: "assets/VT_logo.png",
+  icon: "assets/robot_logo.png",
 
   // A list of all workflows the app will use.
-  workflows: [CreateReminderWorkflow, CreateMeetingWorkflow],
+  workflows: [CreateAgenda, CreateMeeting, CreatePoll, CreateReminder],
 
   // If your app communicates to any external domains, list them here.
   outgoingDomains: [],
@@ -41,7 +43,7 @@ export default Manifest({
   ],
 
   /**
-   * Defines the scope of the bot's permissions/abilities.
+   * Defines the scope of Convo Crafter's permissions/abilities.
    * View the following for more info:
    * https://api.slack.com/scopes?filter=granular_bot
    */
