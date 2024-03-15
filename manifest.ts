@@ -7,8 +7,9 @@ import { RemindersDatastore } from "./datastores/reminders.ts";
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import ActionListDatastore from "./datastores/action_list_datastore.ts";
 import AgendaDatastore from "./datastores/agenda_datastore.ts";
-import { CreateAgenda } from "./workflows/create_agenda.ts";
+import { MeetingDatastore } from "./datastores/meeting_datastore.ts";
 import { CreateMeeting } from "./workflows/create_meeting.ts";
+import { CreateAgenda } from "./workflows/create_agenda.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
 
 /**
@@ -38,6 +39,7 @@ export default Manifest({
     ActionListDatastore,
     AgendaDatastore,
     RemindersDatastore,
+    MeetingDatastore,
   ],
 
   /**
