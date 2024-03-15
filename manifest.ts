@@ -11,6 +11,7 @@ import { MeetingDatastore } from "./datastores/meeting_datastore.ts";
 import { CreateMeeting } from "./workflows/create_meeting.ts";
 import { CreateAgenda } from "./workflows/create_agenda.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
+import { MeetingInfoType } from "./types/meeting_info.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -40,6 +41,11 @@ export default Manifest({
     AgendaDatastore,
     RemindersDatastore,
     MeetingDatastore,
+  ],
+
+  // A list of custom Types the app will use
+  types: [
+    MeetingInfoType,
   ],
 
   /**
