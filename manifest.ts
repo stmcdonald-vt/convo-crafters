@@ -7,6 +7,8 @@ import { RemindersDatastore } from "./datastores/reminders.ts";
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import ActionListDatastore from "./datastores/action_list_datastore.ts";
 import AgendaDatastore from "./datastores/agenda_datastore.ts";
+import { MeetingDatastore } from "./datastores/meeting_datastore.ts";
+import CreateMeetingWorkflow from "./workflows/create_meeting.ts";
 
 /**
  * The app manifest contains the app's configuration. This
@@ -15,7 +17,7 @@ import AgendaDatastore from "./datastores/agenda_datastore.ts";
  */
 export default Manifest({
   // This is the app's internal name.
-  name: "Convo-Crafter",
+  name: "Sean Testing Local",
 
   // App description the helps users decide whether to us it.
   description: "A Slack bot that facilitates meeting functions and flow",
@@ -24,7 +26,7 @@ export default Manifest({
   icon: "assets/VT_logo.png",
 
   // A list of all workflows the app will use.
-  workflows: [CreateReminderWorkflow],
+  workflows: [CreateReminderWorkflow, CreateMeetingWorkflow],
 
   // If your app communicates to any external domains, list them here.
   outgoingDomains: [],
@@ -35,6 +37,7 @@ export default Manifest({
     ActionListDatastore,
     AgendaDatastore,
     RemindersDatastore,
+    MeetingDatastore,
   ],
 
   /**
