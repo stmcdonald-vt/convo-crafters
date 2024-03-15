@@ -17,7 +17,7 @@ import CreateMeetingWorkflow from "./workflows/create_meeting.ts";
  */
 export default Manifest({
   // This is the app's internal name.
-  name: "Sean Testing Local",
+  name: "Convo-Crafter",
 
   // App description the helps users decide whether to us it.
   description: "A Slack bot that facilitates meeting functions and flow",
