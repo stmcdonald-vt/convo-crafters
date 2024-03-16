@@ -1,7 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateReminderSetupFunction } from "../functions/create_reminder.ts";
 
-export const CreateReminderWorkflow = DefineWorkflow({
+export const CreateReminder = DefineWorkflow({
   callback_id: "create_reminder",
   title: "Create reminder",
   description: "Create a reminder for a meeting",
@@ -18,13 +18,13 @@ export const CreateReminderWorkflow = DefineWorkflow({
   },
 });
 
-const SetupWorkflowForm = CreateReminderWorkflow.addStep(
+const SetupWorkflowForm = CreateReminder.addStep(
   Schema.slack.functions.OpenForm,
   {
     title: "Create Reminder Form",
     submit_label: "Submit",
     description: ":wave: Create a meeting reminder.",
-    interactivity: CreateReminderWorkflow.inputs.interactivity,
+    interactivity: CreateReminder.inputs.interactivity,
     fields: {
       required: ["channel", "date"],
       elements: [
@@ -32,7 +32,7 @@ const SetupWorkflowForm = CreateReminderWorkflow.addStep(
           name: "channel",
           title: "Select a channel to create the meeting reminder",
           type: Schema.slack.types.channel_id,
-          default: CreateReminderWorkflow.inputs.channel,
+          default: CreateReminder.inputs.channel,
         },
         {
           name: "date",
@@ -55,11 +55,11 @@ const SetupWorkflowForm = CreateReminderWorkflow.addStep(
  * function which sets the welcome message up.
  * See `/functions/setup_function.ts` for more information.
  */
-CreateReminderWorkflow.addStep(CreateReminderSetupFunction, {
+CreateReminder.addStep(CreateReminderSetupFunction, {
   channel: SetupWorkflowForm.outputs.fields.channel,
   date: SetupWorkflowForm.outputs.fields.date,
   message: SetupWorkflowForm.outputs.fields.messageInput,
-  author: CreateReminderWorkflow.inputs.interactivity.interactor.id,
+  author: CreateReminder.inputs.interactivity.interactor.id,
 });
 
 /**
@@ -68,11 +68,11 @@ CreateReminderWorkflow.addStep(CreateReminderSetupFunction, {
  * creating meeting reminder, after the user submits the above
  * form.
  */
-CreateReminderWorkflow.addStep(Schema.slack.functions.SendEphemeralMessage, {
+CreateReminder.addStep(Schema.slack.functions.SendEphemeralMessage, {
   channel_id: SetupWorkflowForm.outputs.fields.channel,
-  user_id: CreateReminderWorkflow.inputs.interactivity.interactor.id,
+  user_id: CreateReminder.inputs.interactivity.interactor.id,
   message:
     `Your meeting reminder for this channel was successfully created! :white_check_mark:`,
 });
 
-export default CreateReminderWorkflow;
+export default CreateReminder;

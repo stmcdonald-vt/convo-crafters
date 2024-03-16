@@ -2,6 +2,7 @@ import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { RemindersDatastore } from "../datastores/reminders.ts";
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
 import { SendReminderWorkflow } from "../workflows/send_reminder.ts";
+import { CreateReminder } from "../workflows/create_reminder.ts";
 
 export const CreateReminderSetupFunction = DefineFunction({
   callback_id: "create_reminder_setup_function",
@@ -70,7 +71,7 @@ export async function findMeetingReminderTrigger(
   }
   const joinedTriggers = allTriggers.triggers.filter((trigger) => (
     trigger.workflow.callback_id ===
-      SendReminderWorkflow.definition.callback_id &&
+      CreateReminder.definition.callback_id &&
     trigger.channel_ids.includes(channel)
   ));
 
