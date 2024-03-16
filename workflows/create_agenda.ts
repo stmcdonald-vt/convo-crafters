@@ -1,4 +1,4 @@
-import { DefineWorkflow } from "deno-slack-sdk/mod.ts";
+import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 
 export const CreateAgenda = DefineWorkflow({
   callback_id: "create_agenda",
@@ -7,13 +7,13 @@ export const CreateAgenda = DefineWorkflow({
   input_parameters: {
     properties: {
       interactivity: {
-        type: "interactivity",
+        type: Schema.slack.types.interactivity,
       },
       channel: {
-        type: "channel_id",
+        type: Schema.slack.types.channel_id,
       },
       user: {
-        type: "user_id",
+        type: Schema.slack.types.user_id,
       },
     },
     required: ["user", "interactivity"],
