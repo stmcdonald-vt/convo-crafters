@@ -1,7 +1,7 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { RemindersDatastore } from "../datastores/reminders.ts";
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
-import { SendReminderWorkflow } from "../workflows/send_reminder.ts";
+import { SendReminder } from "../workflows/send_reminder.ts";
 import { CreateReminder } from "../workflows/create_reminder.ts";
 
 export const CreateReminderSetupFunction = DefineFunction({
@@ -90,12 +90,12 @@ export async function sendReminderChannelTrigger(
   channel: string,
 ): Promise<{ ok: boolean; error?: string }> {
   const triggerResponse = await client.workflows.triggers.create<
-    typeof SendReminderWorkflow.definition
+    typeof SendReminder.definition
   >({
     type: "event",
     name: "meeting reminder",
     description: "Send a message when meeting reminder is set",
-    workflow: `#/workflows/${SendReminderWorkflow.definition.callback_id}`,
+    workflow: `#/workflows/${SendReminder.definition.callback_id}`,
     event: {
       event_type: "slack#/events/channel_renamed",
       channel_ids: [channel],
