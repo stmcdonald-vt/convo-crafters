@@ -31,4 +31,10 @@ export const PollDatastore = DefineDatastore({
       default: {},
     },
   },
+  methods: {
+    create: function (poll) {
+      // Implement
+      return poll;
+    },
+  },
 });
