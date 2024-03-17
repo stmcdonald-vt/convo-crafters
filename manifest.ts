@@ -3,6 +3,7 @@ import { Manifest } from "deno-slack-sdk/mod.ts";
 // create reminder stuff
 import { CreateReminder } from "./workflows/create_reminder.ts";
 import { RemindersDatastore } from "./datastores/reminders.ts";
+import { SendReminder } from "./workflows/send_reminder.ts";
 // sample stuff
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import ActionListDatastore from "./datastores/action_list_datastore.ts";
@@ -29,7 +30,13 @@ export default Manifest({
   icon: "assets/robot_logo.png",
 
   // A list of all workflows the app will use.
-  workflows: [CreateAgenda, CreateMeeting, CreatePoll, CreateReminder],
+  workflows: [
+    CreateAgenda,
+    CreateMeeting,
+    CreatePoll,
+    CreateReminder,
+    SendReminder,
+  ],
 
   // If your app communicates to any external domains, list them here.
   outgoingDomains: [],
