@@ -1,7 +1,6 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { RemindersDatastore } from "../datastores/reminders.ts";
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
-import { CreateReminder } from "../workflows/create_reminder.ts";
 
 export const CreateReminderSetupFunction = DefineFunction({
   callback_id: "create_reminder_setup_function",
@@ -59,51 +58,27 @@ export default SlackFunction(
     if (setupResponse.error) {
       return { error: `Failed to setup reminder: ${setupResponse.error}` };
     }
-    // Search for any existing triggers for the welcome workflow
-    // const triggers = await findMeetingReminderTrigger(client, channel);
-    // if (triggers.error) {
-    //   return { error: `Failed to lookup existing triggers: ${triggers.error}` };
-    // }
 
     return { outputs: {} };
   },
 );
 
-export function setupMeetingReminder(
+export async function setupMeetingReminder(
   client: SlackAPIClient,
   channel: string,
   date: number,
   message: string,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
-    const result = client.chat.scheduleMessage({
+    const result = await client.chat.scheduleMessage({
       channel: channel,
       text: message,
-      post_at: date.toString(),
+      post_at: date,
     });
     console.log(result);
-    return Promise.resolve({ ok: true });
+    return { ok: true };
   } catch (error) {
     console.error(error);
-    return Promise.resolve({ ok: false, error: error.message });
+    return { ok: false, error: error.message };
   }
-}
-
-export async function findMeetingReminderTrigger(
-  client: SlackAPIClient,
-  channel: string,
-): Promise<{ error?: string; exists?: boolean }> {
-  const allTriggers = await client.workflows.triggers.list({ is_owner: true });
-  if (!allTriggers.ok) {
-    return { error: allTriggers.error };
-  }
-  const joinedTriggers = allTriggers.triggers.filter((trigger) => (
-    trigger.workflow.callback_id ===
-      CreateReminder.definition.callback_id &&
-    trigger.channel_ids.includes(channel)
-  ));
-
-  // Return if any matching triggers were found
-  const exists = joinedTriggers.length > 0;
-  return { exists };
 }
