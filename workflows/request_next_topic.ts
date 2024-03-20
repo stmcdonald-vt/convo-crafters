@@ -48,6 +48,7 @@ const formData = Request_next_topic.addStep(
 // Step 2: send next topic request details along with approve/deny buttons to speaker
 Request_next_topic.addStep(SendRequestToSpeakerFunction, {
   interactivity: formData.outputs.interactivity,
+  listener: Request_next_topic.inputs.interactivity.interactor.id,
   speaker: formData.outputs.fields.speaker,
   reason: formData.outputs.fields.reason,
 });

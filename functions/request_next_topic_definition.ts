@@ -19,6 +19,10 @@ export const SendRequestToSpeakerFunction = DefineFunction({
         type: Schema.slack.types.user_id,
         description: "The current speaker",
       },
+      listener: {
+        type: Schema.slack.types.user_id,
+        description: "The user requesting to change topics",
+      },
       reason: {
         type: Schema.types.string,
         description: "Your reason for wanting to move to the next topic",
@@ -26,6 +30,7 @@ export const SendRequestToSpeakerFunction = DefineFunction({
     },
     required: [
       "speaker",
+      "listener",
       "reason",
       "interactivity",
     ],
