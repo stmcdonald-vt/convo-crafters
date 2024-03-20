@@ -1,5 +1,8 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
 
+// import SampleWorkflow from "./workflows/sample_workflow.ts";
+import Request_next_topic from "./workflows/request_next_topic.ts";
+
 // create reminder stuff
 import { CreateReminder } from "./workflows/create_reminder.ts";
 import { RemindersDatastore } from "./datastores/reminders.ts";
@@ -36,6 +39,7 @@ export default Manifest({
     CreatePoll,
     CreateReminder,
     SendReminder,
+    Request_next_topic,
   ],
 
   // If your app communicates to any external domains, list them here.
