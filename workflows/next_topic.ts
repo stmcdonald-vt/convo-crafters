@@ -7,7 +7,7 @@ import { SendRequestToSpeakerFunction } from "../functions/topic_definition.ts";
  */
 export const RequestNextTopic = DefineWorkflow({
   callback_id: "next_topic",
-  title: "Request next topic",
+  title: "Next topic",
   description: "Request to move on to the next topic",
   input_parameters: {
     properties: {
@@ -23,7 +23,7 @@ export const RequestNextTopic = DefineWorkflow({
 const formData = RequestNextTopic.addStep(
   Schema.slack.functions.OpenForm,
   {
-    title: "Request Next Topic Details",
+    title: "Request Details",
     interactivity: RequestNextTopic.inputs.interactivity,
     submit_label: "Submit",
     description: "Enter your reason for wanting to move to the next topic",

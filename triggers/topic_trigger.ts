@@ -1,7 +1,7 @@
 import { Trigger } from "deno-slack-sdk/types.ts";
 import { TriggerContextData, TriggerTypes } from "deno-slack-api/mod.ts";
 
-const requestNextTopicTrigger: Trigger = {
+const nextTopicTrigger: Trigger = {
   type: TriggerTypes.Shortcut,
   name: "Request to Move on to Next Topic",
   description: "Ask the current speaker to move on to the next topic",
@@ -13,4 +13,4 @@ const requestNextTopicTrigger: Trigger = {
   },
 };
 
-export default requestNextTopicTrigger;
+export default nextTopicTrigger;
