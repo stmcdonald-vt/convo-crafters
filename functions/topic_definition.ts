@@ -9,7 +9,7 @@ export const SendRequestToSpeakerFunction = DefineFunction({
   callback_id: "request_next_topic",
   title: "Request to Move on to Next Topic",
   description: "Request to move on to the next topic",
-  source_file: "functions/request_next_topic_mod.ts",
+  source_file: "functions/topic_mod.ts",
   input_parameters: {
     properties: {
       interactivity: {

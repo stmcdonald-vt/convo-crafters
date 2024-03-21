@@ -1,7 +1,7 @@
-import { SendRequestToSpeakerFunction } from "./request_next_topic_definition.ts";
+import { SendRequestToSpeakerFunction } from "./topic_definition.ts";
 import { SlackFunction } from "deno-slack-sdk/mod.ts";
-import { APPROVE_ID, DENY_ID } from "./request_next_topic_constants.ts";
-import nextTopicRequestHeaderBlocks from "./request_next_topic_blocks.ts";
+import { APPROVE_ID, DENY_ID } from "../constants/topic_constants.ts";
+import nextTopicRequestHeaderBlocks from "./topic_blocks.ts";
 
 // Custom function that sends a message to the current speaker asking
 // to move on to the next topic. The message includes some Block Kit with two
