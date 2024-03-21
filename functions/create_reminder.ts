@@ -1,8 +1,6 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { RemindersDatastore } from "../datastores/reminders.ts";
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
-import { SendReminder } from "../workflows/send_reminder.ts";
-import { CreateReminder } from "../workflows/create_reminder.ts";
 
 export const CreateReminderSetupFunction = DefineFunction({
   callback_id: "create_reminder_setup_function",
@@ -51,63 +49,36 @@ export default SlackFunction(
       return { error: `Failed to create reminder: ${putResponse.error}` };
     }
 
-    // Search for any existing triggers for the welcome workflow
-    const triggers = await findMeetingReminderTrigger(client, channel);
-    if (triggers.error) {
-      return { error: `Failed to lookup existing triggers: ${triggers.error}` };
+    const setupResponse = await setupMeetingReminder(
+      client,
+      channel,
+      date,
+      message,
+    );
+    if (setupResponse.error) {
+      return { error: `Failed to setup reminder: ${setupResponse.error}` };
     }
 
     return { outputs: {} };
   },
 );
 
-export async function findMeetingReminderTrigger(
+export async function setupMeetingReminder(
   client: SlackAPIClient,
   channel: string,
-): Promise<{ error?: string; exists?: boolean }> {
-  const allTriggers = await client.workflows.triggers.list({ is_owner: true });
-  if (!allTriggers.ok) {
-    return { error: allTriggers.error };
-  }
-  const joinedTriggers = allTriggers.triggers.filter((trigger) => (
-    trigger.workflow.callback_id ===
-      CreateReminder.definition.callback_id &&
-    trigger.channel_ids.includes(channel)
-  ));
-
-  // Return if any matching triggers were found
-  const exists = joinedTriggers.length > 0;
-  return { exists };
-}
-
-/**
- * sendReminderChannelTrigger
- *  creates a new event trigger
- * for the "Send Reminder" workflow in a channel.
- */
-export async function sendReminderChannelTrigger(
-  client: SlackAPIClient,
-  channel: string,
+  date: number,
+  message: string,
 ): Promise<{ ok: boolean; error?: string }> {
-  const triggerResponse = await client.workflows.triggers.create<
-    typeof SendReminder.definition
-  >({
-    type: "event",
-    name: "meeting reminder",
-    description: "Send a message when meeting reminder is set",
-    workflow: `#/workflows/${SendReminder.definition.callback_id}`,
-    event: {
-      event_type: "slack#/events/channel_renamed",
-      channel_ids: [channel],
-    },
-    inputs: {
-      channel: { value: channel },
-      triggered_user: { value: "{{data.user_id}}" },
-    },
-  });
-
-  if (!triggerResponse.ok) {
-    return { ok: false, error: triggerResponse.error };
+  try {
+    const result = await client.chat.scheduleMessage({
+      channel: channel,
+      text: message,
+      post_at: date,
+    });
+    console.log(result);
+    return { ok: true };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, error: error.message };
   }
-  return { ok: true };
 }
