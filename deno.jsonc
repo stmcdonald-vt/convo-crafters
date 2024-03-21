@@ -10,7 +10,8 @@
       "triggers",
       "types",
       "views",
-      "workflows"
+      "workflows",
+      "test"
     ]
   },
   "importMap": "import_map.json",
@@ -23,7 +24,8 @@
       "triggers",
       "types",
       "views",
-      "workflows"
+      "workflows",
+      "test"
     ]
   },
   "lock": false,

@@ -6,7 +6,7 @@ import {
   assertMatch,
   assertStringIncludes,
 } from "std/assert/mod.ts";
-import CreateMeetingFunction from "./create_meeting.ts";
+import CreateMeetingFunction from "../functions/create_meeting.ts";
 import { MeetingDatastore } from "../datastores/meeting_datastore.ts";
 
 const { createContext } = SlackFunctionTester("create_meeting_setup_function");
