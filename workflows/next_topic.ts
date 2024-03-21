@@ -7,7 +7,7 @@ import { SendRequestToSpeakerFunction } from "../functions/topic_definition.ts";
  */
 export const RequestNextTopic = DefineWorkflow({
   callback_id: "next_topic",
-  title: "Request to Move on to Next Topic",
+  title: "Request next topic",
   description: "Request to move on to the next topic",
   input_parameters: {
     properties: {
