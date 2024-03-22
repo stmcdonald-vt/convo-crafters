@@ -10,7 +10,6 @@ import { RemindersDatastore } from "./datastores/reminders.ts";
 // Workflows
 import RequestNextTopic from "./workflows/next_topic.ts";
 import { CreateReminder } from "./workflows/create_reminder.ts";
-import { SendReminder } from "./workflows/send_reminder.ts";
 import { CreateMeeting } from "./workflows/create_meeting.ts";
 import { CreateAgenda } from "./workflows/create_agenda.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
@@ -39,7 +38,6 @@ export default Manifest({
     CreateMeeting,
     CreatePoll,
     CreateReminder,
-    SendReminder,
     RequestNextTopic,
   ],
 
