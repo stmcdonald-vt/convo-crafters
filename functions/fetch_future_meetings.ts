@@ -27,7 +27,7 @@ export const FetchFutureMeetingsFunction = DefineFunction({
 export default SlackFunction(
   FetchFutureMeetingsFunction,
   async ({ client }) => {
-    const nowTimestampSeconds = Math.floor(new Date().getTime() / 1000);
+    const nowTimestampSeconds = Math.floor(Date.now() / 1000);
 
     // DynamoDB expression to represent "Timestamp in future"
     const expressions = {
@@ -55,9 +55,6 @@ export default SlackFunction(
         timestamp: meeting.timestamp,
       };
     });
-
-    // Until we have tests and use this function in a workflow
-    console.log("The meeting info:", meetingInfo);
 
     return { outputs: { meetings: meetingInfo } };
   },

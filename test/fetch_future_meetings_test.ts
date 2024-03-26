@@ -3,18 +3,16 @@ import { SlackFunctionTester } from "deno-slack-sdk/mod.ts";
 import {
   assertEquals,
   assertExists,
-  assertMatch,
   assertStringIncludes,
 } from "std/assert/mod.ts";
-import CreateMeetingFunction from "../functions/create_meeting.ts";
 import { MeetingDatastore } from "../datastores/meeting_datastore.ts";
 import { DatastoreItem } from "deno-slack-api/types.ts";
+import FetchFutureMeetingsFunction from "../functions/fetch_future_meetings.ts";
 
 const { createContext } = SlackFunctionTester("fetch_future_meetings");
 
 // Mocked date for stable testing
-const mockDate = new Date();
-mockDate.setSeconds(1711000000);
+const mockDate = new Date(1711000001000);
 Date.now = () => mockDate.getTime();
 
 // Collection of meetings stored in the mocked datastore
@@ -42,45 +40,40 @@ type ExpectedItemType = {
   timestamp?: number;
 };
 
-Deno.test("Successful fetch", async () => {
-  let putDatastore;
-  let putItem: ExpectedItemType = {};
+Deno.test("Fetches only future meetings", async () => {
+  mockMeetings = [
+    { id: "past-meeting-id", channel: "channel-id", timestamp: 1711000000 },
+    {
+      id: "right-now-meeting-id",
+      channel: "channel-id",
+      timestamp: 1711000001,
+    },
+    { id: "future-meeting-id-1", channel: "channel-id", timestamp: 1711000002 },
+    { id: "future-meeting-id-2", channel: "channel-id", timestamp: 1711000003 },
+  ];
 
-  const inputs = {
-    channel: "channel-id",
-    timestamp: 1710804,
-  };
-
-  const { error, outputs } = await CreateMeetingFunction(
-    createContext({ inputs }),
+  const { error, outputs } = await FetchFutureMeetingsFunction(
+    createContext({ inputs: {} }),
   );
 
-  // No error indicates our mocked put route was called
+  // No error indicates our mocked query route was called
   assertEquals(error, undefined);
-  assertEquals(outputs, {});
-
-  // Assert put payload
-  assertEquals(putDatastore, MeetingDatastore.name);
-  assertExists(putItem.id);
-  assertMatch(putItem.id, RegExp(/.+/)); // At least one character
-  assertEquals(putItem.channel, "channel-id");
-  assertEquals(putItem.timestamp, 1710804);
+  assertEquals(
+    outputs,
+    { meetings: [mockMeetings[2], mockMeetings[3]] },
+    "only future meeting returned",
+  );
 });
 
-Deno.test("Fail to save a meeting", async () => {
-  mf.mock("POST@/api/apps.datastore.put", () => {
+Deno.test("Fail to fetch", async () => {
+  mf.mock("POST@/api/apps.datastore.query", () => {
     return new Response(
       JSON.stringify({ ok: false, error: "datastore_error" }),
     );
   });
 
-  const inputs = {
-    channel: "channel-id",
-    timestamp: 1710804,
-  };
-
-  const { error, outputs } = await CreateMeetingFunction(
-    createContext({ inputs }),
+  const { error, outputs } = await FetchFutureMeetingsFunction(
+    createContext({ inputs: {} }),
   );
 
   assertExists(error);
