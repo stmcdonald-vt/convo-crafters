@@ -12,24 +12,6 @@ export const MeetingDatastore = DefineDatastore({
     id: {
       type: Schema.types.string,
     },
-    reminders: {
-      type: Schema.types.array,
-      items: {
-        type: Schema.types.string,
-      },
-    },
-    agendas: {
-      type: Schema.types.array,
-      items: {
-        type: Schema.types.string,
-      },
-    },
-    action_items: {
-      type: Schema.types.array,
-      items: {
-        type: Schema.types.string,
-      },
-    },
     channel: {
       type: Schema.slack.types.channel_id,
     },
