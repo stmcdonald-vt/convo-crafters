@@ -1,4 +1,5 @@
 import { Manifest } from "deno-slack-sdk/mod.ts";
+import { load } from "std/dotenv/mod.ts";
 
 // Datastores
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
@@ -17,6 +18,7 @@ import { CreatePoll } from "./workflows/create_poll.ts";
 // Types
 import { MeetingInfoType } from "./types/meeting_info.ts";
 
+const env = await load();
 /**
  * The app manifest contains the app's configuration. This
  * file defines attributes like app name and description.
@@ -24,7 +26,7 @@ import { MeetingInfoType } from "./types/meeting_info.ts";
  */
 export default Manifest({
   // This is the app's internal name.
-  name: "Convo-Crafter",
+  name: env.LOCAL_NAME || "Convo-Crafter",
 
   // App description the helps users decide whether to us it.
   description: "A Slack bot that facilitates meeting functions and flow",
