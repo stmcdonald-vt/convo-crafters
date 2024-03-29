@@ -1,7 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateAgendaItemSetupFunction } from "../functions/create_agenda_item.ts";
 import { FetchFutureMeetingsFunction } from "../functions/fetch_future_meetings.ts";
-import { MeetingEnumChoice } from "../types/meeting_info.ts";
 
 export const CreateAgendaItem = DefineWorkflow({
   callback_id: "create_agenda_item",
