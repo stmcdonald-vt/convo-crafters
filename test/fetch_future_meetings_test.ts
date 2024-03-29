@@ -58,9 +58,23 @@ Deno.test("Fetches only future meetings", async () => {
 
   // No error indicates our mocked query route was called
   assertEquals(error, undefined);
+
   assertEquals(
     outputs,
-    { meetings: [mockMeetings[2], mockMeetings[3]] },
+    {
+      meeting_ids: ["future-meeting-id-1", "future-meeting-id-2"],
+      meetings: [
+        {
+          value: "future-meeting-id-1",
+          title: "Meeting at 1711000002 in channel-id",
+        },
+        {
+          value: "future-meeting-id-2",
+          title: "Meeting at 1711000003 in channel-id",
+        },
+      ],
+      interactivity: undefined,
+    },
     "only future meeting returned",
   );
 });
