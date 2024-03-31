@@ -1,6 +1,6 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { queryMeetingDatastore } from "../datastores/meeting_datastore.ts";
-import { MeetingInfoType } from "../types/meeting_info.ts";
+import { MeetingEnumChoice } from "../types/meeting_info.ts";
 
 export const FetchFutureMeetingsFunction = DefineFunction({
   callback_id: "fetch_future_meetings_function",
@@ -8,16 +8,27 @@ export const FetchFutureMeetingsFunction = DefineFunction({
   description: "Fetch meetings that have not yet occurred",
   source_file: "functions/fetch_future_meetings.ts",
   input_parameters: {
-    properties: {},
+    properties: {
+      interactivity: {
+        type: Schema.slack.types.interactivity,
+      },
+    },
     required: [],
   },
   output_parameters: {
     properties: {
+      meeting_ids: {
+        type: Schema.types.array,
+        items: { type: Schema.types.string },
+      },
       meetings: {
         type: Schema.types.array,
-        items: { type: MeetingInfoType },
+        items: { type: MeetingEnumChoice },
         title: "Meetings",
         description: "Meetings that are set for the future",
+      },
+      interactivity: {
+        type: Schema.slack.types.interactivity,
       },
     },
     required: ["meetings"],
@@ -26,7 +37,7 @@ export const FetchFutureMeetingsFunction = DefineFunction({
 
 export default SlackFunction(
   FetchFutureMeetingsFunction,
-  async ({ client }) => {
+  async ({ inputs, client }) => {
     const nowTimestampSeconds = Math.floor(Date.now() / 1000);
 
     // DynamoDB expression to represent "Timestamp in future"
@@ -50,12 +61,20 @@ export default SlackFunction(
     // Transform DB records to simplified MeetingInfo
     const meetingInfo = meetings.items.map((meeting) => {
       return {
-        id: meeting.id,
-        channel: meeting.channel,
-        timestamp: meeting.timestamp,
+        value: meeting.id,
+        // Temporary title, we should add a title to create meeting flow.
+        title: `Meeting at ${meeting.timestamp} in ${meeting.channel}`,
       };
     });
 
-    return { outputs: { meetings: meetingInfo } };
+    const meeting_ids = meetings.items.map((meeting) => meeting.id);
+
+    return {
+      outputs: {
+        meeting_ids,
+        meetings: meetingInfo,
+        interactivity: inputs.interactivity,
+      },
+    };
   },
 );
