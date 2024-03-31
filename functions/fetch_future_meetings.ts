@@ -61,8 +61,12 @@ export default SlackFunction(
       };
     }
 
+    const sortedMeetings = response.items.toSorted((a, b) =>
+      a.timestamp - b.timestamp
+    );
+
     // Transform into different usable outputs
-    const meetings = response.items.map((meeting) => {
+    const meetings = sortedMeetings.map((meeting) => {
       return {
         id: meeting.id,
         name: meeting.name,
@@ -71,14 +75,16 @@ export default SlackFunction(
       };
     });
 
-    const meeting_enum_choices = response.items.map((meeting) => {
+    const meeting_enum_choices = sortedMeetings.map((meeting) => {
       return {
         value: meeting.id,
-        title: meeting.name,
+        title: `${meeting.name} at ${
+          // Timestamp is in seconds and Date needs ms
+          new Date(meeting.timestamp * 1000).toLocaleString()}`,
       };
     });
 
-    const meeting_ids = response.items.map((meeting) => meeting.id);
+    const meeting_ids = sortedMeetings.map((meeting) => meeting.id);
 
     return {
       outputs: {
