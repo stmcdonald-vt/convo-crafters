@@ -1,6 +1,7 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { queryMeetingDatastore } from "../datastores/meeting_datastore.ts";
-import { MeetingEnumChoice } from "../types/meeting_info.ts";
+import { EnumChoice } from "../types/enum_choice.ts";
+import { MeetingInfo } from "../types/meeting_info.ts";
 
 export const FetchFutureMeetingsFunction = DefineFunction({
   callback_id: "fetch_future_meetings_function",
@@ -21,11 +22,13 @@ export const FetchFutureMeetingsFunction = DefineFunction({
         type: Schema.types.array,
         items: { type: Schema.types.string },
       },
+      meeting_enum_choices: {
+        type: Schema.types.array,
+        items: { type: EnumChoice },
+      },
       meetings: {
         type: Schema.types.array,
-        items: { type: MeetingEnumChoice },
-        title: "Meetings",
-        description: "Meetings that are set for the future",
+        items: { type: MeetingInfo },
       },
       interactivity: {
         type: Schema.slack.types.interactivity,
@@ -49,30 +52,39 @@ export default SlackFunction(
       }, // Map query to current time
     };
 
-    const meetings = await queryMeetingDatastore(client, expressions);
+    const response = await queryMeetingDatastore(client, expressions);
 
-    if (!meetings.ok) {
+    if (!response.ok) {
       return {
         total: 0,
-        error: `Failed to fetch future meetings: ${meetings.error}`,
+        error: `Failed to fetch future meetings: ${response.error}`,
       };
     }
 
-    // Transform DB records to simplified MeetingInfo
-    const meetingInfo = meetings.items.map((meeting) => {
+    // Transform into different usable outputs
+    const meetings = response.items.map((meeting) => {
       return {
-        value: meeting.id,
-        // Temporary title, we should add a title to create meeting flow.
-        title: `Meeting at ${meeting.timestamp} in ${meeting.channel}`,
+        id: meeting.id,
+        name: meeting.name,
+        channel: meeting.channel,
+        timestamp: meeting.timestamp,
       };
     });
 
-    const meeting_ids = meetings.items.map((meeting) => meeting.id);
+    const meeting_enum_choices = response.items.map((meeting) => {
+      return {
+        value: meeting.id,
+        title: meeting.name,
+      };
+    });
+
+    const meeting_ids = response.items.map((meeting) => meeting.id);
 
     return {
       outputs: {
+        meetings,
+        meeting_enum_choices,
         meeting_ids,
-        meetings: meetingInfo,
         interactivity: inputs.interactivity,
       },
     };

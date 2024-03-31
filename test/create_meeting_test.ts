@@ -19,6 +19,7 @@ type ExpectedItemType = {
   id?: string;
   channel?: string;
   timestamp?: number;
+  name?: string;
 };
 
 Deno.test("Successfully save a meeting", async () => {
@@ -40,6 +41,7 @@ Deno.test("Successfully save a meeting", async () => {
   const inputs = {
     channel: "channel-id",
     timestamp: 1710804,
+    name: "meeting name",
   };
 
   const { error, outputs } = await CreateMeetingFunction(
@@ -56,6 +58,7 @@ Deno.test("Successfully save a meeting", async () => {
   assertMatch(putItem.id, RegExp(/.+/)); // At least one character
   assertEquals(putItem.channel, "channel-id");
   assertEquals(putItem.timestamp, 1710804);
+  assertEquals(putItem.name, "meeting name");
 });
 
 Deno.test("Fail to save a meeting", async () => {
@@ -68,6 +71,7 @@ Deno.test("Fail to save a meeting", async () => {
   const inputs = {
     channel: "channel-id",
     timestamp: 1710804,
+    name: "meeting name",
   };
 
   const { error, outputs } = await CreateMeetingFunction(

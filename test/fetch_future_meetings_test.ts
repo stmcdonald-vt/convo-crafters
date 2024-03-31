@@ -42,14 +42,30 @@ type ExpectedItemType = {
 
 Deno.test("Fetches only future meetings", async () => {
   mockMeetings = [
-    { id: "past-meeting-id", channel: "channel-id", timestamp: 1711000000 },
+    {
+      id: "past-meeting-id",
+      channel: "channel-id",
+      timestamp: 1711000000,
+      name: "past meeting",
+    },
     {
       id: "right-now-meeting-id",
       channel: "channel-id",
       timestamp: 1711000001,
+      name: "right now meeting",
     },
-    { id: "future-meeting-id-1", channel: "channel-id", timestamp: 1711000002 },
-    { id: "future-meeting-id-2", channel: "channel-id", timestamp: 1711000003 },
+    {
+      id: "future-meeting-id-1",
+      channel: "channel-id",
+      timestamp: 1711000002,
+      name: "future meeting 1",
+    },
+    {
+      id: "future-meeting-id-2",
+      channel: "channel-id",
+      timestamp: 1711000003,
+      name: "future meeting 2",
+    },
   ];
 
   const { error, outputs } = await FetchFutureMeetingsFunction(
@@ -63,14 +79,28 @@ Deno.test("Fetches only future meetings", async () => {
     outputs,
     {
       meeting_ids: ["future-meeting-id-1", "future-meeting-id-2"],
-      meetings: [
+      meeting_enum_choices: [
         {
           value: "future-meeting-id-1",
-          title: "Meeting at 1711000002 in channel-id",
+          title: "future meeting 1",
         },
         {
           value: "future-meeting-id-2",
-          title: "Meeting at 1711000003 in channel-id",
+          title: "future meeting 2",
+        },
+      ],
+      meetings: [
+        {
+          id: "future-meeting-id-1",
+          channel: "channel-id",
+          timestamp: 1711000002,
+          name: "future meeting 1",
+        },
+        {
+          id: "future-meeting-id-2",
+          channel: "channel-id",
+          timestamp: 1711000003,
+          name: "future meeting 2",
         },
       ],
       interactivity: undefined,

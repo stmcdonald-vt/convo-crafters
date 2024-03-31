@@ -40,16 +40,16 @@ const SetupWorkflowForm = CreateAgendaItem.addStep(
           title: "Select a meeting",
           type: Schema.types.string,
           enum: futureMeetings.outputs.meeting_ids,
-          choices: futureMeetings.outputs.meetings,
+          choices: futureMeetings.outputs.meeting_enum_choices,
         },
         {
           name: "name",
-          title: "Provide the name of this agenda.",
+          title: "Provide the name of this agenda item.",
           type: Schema.types.string,
         },
         {
           name: "details",
-          title: "Provide details for this agenda.",
+          title: "Provide details for this agenda item.",
           type: Schema.types.string,
           long: true,
         },
@@ -70,15 +70,14 @@ CreateAgendaItem.addStep(CreateAgendaItemSetupFunction, {
 
 /**
  * This step uses the SendEphemeralMessage Slack function.
- * TODO: Make a custom function that takes in the selected meeting_id
- * and the fetched meetings and returns the channel_id.
- * With the channel_id, we can do the below ephemeral message.
+ * TODO: It doesn't make sense to send a message in the same channel as the meeting
+ * if the command is run from somewhere else. Might be worth having a generic confirmation
+ * dialog and use that instead of message based confirmation?
  */
 // CreateAgendaItem.addStep(Schema.slack.functions.SendEphemeralMessage, {
-//   channel_id: SetupWorkflowForm.outputs.fields.channel,
+//   channel_id: CreateAgendaItem.inputs.channel,
 //   user_id: CreateAgendaItem.inputs.interactivity.interactor.id,
-//   message:
-//     `Your meeting meeting for this channel was successfully created! :white_check_mark:`,
+//   message: `Your agenda item was successfully created! :white_check_mark:`,
 // });
 
 export default CreateAgendaItem;

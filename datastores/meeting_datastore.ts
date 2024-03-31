@@ -18,6 +18,9 @@ export const MeetingDatastore = DefineDatastore({
     timestamp: {
       type: Schema.slack.types.timestamp,
     },
+    name: {
+      type: Schema.types.string,
+    },
   },
 });
 
