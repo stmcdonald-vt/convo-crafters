@@ -57,13 +57,13 @@ Deno.test("Fetches only future meetings", async () => {
     {
       id: "future-meeting-id-1",
       channel: "channel-id",
-      timestamp: 1711000002,
+      timestamp: 1711000003,
       name: "future meeting 1",
     },
     {
       id: "future-meeting-id-2",
       channel: "channel-id",
-      timestamp: 1711000003,
+      timestamp: 1711000002,
       name: "future meeting 2",
     },
   ];
@@ -78,29 +78,33 @@ Deno.test("Fetches only future meetings", async () => {
   assertEquals(
     outputs,
     {
-      meeting_ids: ["future-meeting-id-1", "future-meeting-id-2"],
+      meeting_ids: ["future-meeting-id-2", "future-meeting-id-1"],
       meeting_enum_choices: [
         {
-          value: "future-meeting-id-1",
-          title: "future meeting 1",
+          value: "future-meeting-id-2",
+          title: `future meeting 2 at ${
+            new Date(1711000002000).toLocaleString()
+          }`,
         },
         {
-          value: "future-meeting-id-2",
-          title: "future meeting 2",
+          value: "future-meeting-id-1",
+          title: `future meeting 1 at ${
+            new Date(1711000003000).toLocaleString()
+          }`,
         },
       ],
       meetings: [
         {
-          id: "future-meeting-id-1",
-          channel: "channel-id",
-          timestamp: 1711000002,
-          name: "future meeting 1",
-        },
-        {
           id: "future-meeting-id-2",
           channel: "channel-id",
-          timestamp: 1711000003,
+          timestamp: 1711000002,
           name: "future meeting 2",
+        },
+        {
+          id: "future-meeting-id-1",
+          channel: "channel-id",
+          timestamp: 1711000003,
+          name: "future meeting 1",
         },
       ],
       interactivity: undefined,
