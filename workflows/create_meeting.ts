@@ -35,14 +35,14 @@ const SetupWorkflowForm = CreateMeeting.addStep(
           default: CreateMeeting.inputs.channel,
         },
         {
-          name: "date",
-          title: "Select a time to schedule the meeting",
-          type: Schema.slack.types.timestamp,
-        },
-        {
           name: "name",
           title: "Give a name to the meeting",
           type: Schema.types.string,
+        },
+        {
+          name: "date",
+          title: "Select a time to schedule the meeting",
+          type: Schema.slack.types.timestamp,
         },
       ],
     },
