@@ -20,15 +20,26 @@ export const CreateAgendaItemSetupFunction = DefineFunction({
         type: Schema.types.string,
         description: "Longer description of this agenda.",
       },
+      interactivity: {
+        type: Schema.slack.types.interactivity,
+      },
     },
-    required: ["meeting_id", "name", "details"],
+    required: ["meeting_id", "name", "details", "interactivity"],
+  },
+  output_parameters: {
+    properties: {
+      interactivity: {
+        type: Schema.slack.types.interactivity,
+      },
+    },
+    required: ["interactivity"],
   },
 });
 
 export default SlackFunction(
   CreateAgendaItemSetupFunction,
   async ({ inputs, client }) => {
-    const { meeting_id, name, details } = inputs;
+    const { meeting_id, name, details, interactivity } = inputs;
     const uuid = crypto.randomUUID();
 
     const putResponse = await client.apps.datastore.put<
@@ -42,6 +53,6 @@ export default SlackFunction(
       return { error: `Failed to create agenda item: ${putResponse.error}` };
     }
 
-    return { outputs: {} };
+    return { outputs: { interactivity } };
   },
 );
