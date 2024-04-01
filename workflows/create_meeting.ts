@@ -26,7 +26,7 @@ const SetupWorkflowForm = CreateMeeting.addStep(
     description: ":wave: Create a meeting.",
     interactivity: CreateMeeting.inputs.interactivity,
     fields: {
-      required: ["channel", "date"],
+      required: ["channel", "date", "name"],
       elements: [
         {
           name: "channel",
@@ -35,8 +35,13 @@ const SetupWorkflowForm = CreateMeeting.addStep(
           default: CreateMeeting.inputs.channel,
         },
         {
+          name: "name",
+          title: "Give a name to the meeting",
+          type: Schema.types.string,
+        },
+        {
           name: "date",
-          title: "Select a time to send the meeting",
+          title: "Select a time to schedule the meeting",
           type: Schema.slack.types.timestamp,
         },
       ],
@@ -52,6 +57,7 @@ const SetupWorkflowForm = CreateMeeting.addStep(
 CreateMeeting.addStep(CreateMeetingSetupFunction, {
   channel: SetupWorkflowForm.outputs.fields.channel,
   timestamp: SetupWorkflowForm.outputs.fields.date,
+  name: SetupWorkflowForm.outputs.fields.name,
 });
 
 /**

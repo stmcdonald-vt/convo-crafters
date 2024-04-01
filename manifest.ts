@@ -16,7 +16,8 @@ import { CreateAgendaItem } from "./workflows/create_agenda_item.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
 
 // Types
-import { MeetingEnumChoice } from "./types/meeting_info.ts";
+import { EnumChoice } from "./types/enum_choice.ts";
+import { MeetingInfo } from "./types/meeting_info.ts";
 
 const env = await load();
 /**
@@ -57,7 +58,8 @@ export default Manifest({
 
   // A list of custom Types the app will use
   types: [
-    MeetingEnumChoice,
+    EnumChoice,
+    MeetingInfo,
   ],
 
   /**

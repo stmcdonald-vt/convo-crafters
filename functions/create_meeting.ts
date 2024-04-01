@@ -16,6 +16,10 @@ export const CreateMeetingSetupFunction = DefineFunction({
         type: Schema.slack.types.timestamp,
         description: "Date to send the meeting",
       },
+      name: {
+        type: Schema.types.string,
+        description: "Name for the meeting",
+      },
     },
     required: ["channel", "timestamp"],
   },
@@ -24,7 +28,7 @@ export const CreateMeetingSetupFunction = DefineFunction({
 export default SlackFunction(
   CreateMeetingSetupFunction,
   async ({ inputs, client }) => {
-    const { channel, timestamp } = inputs;
+    const { channel, timestamp, name } = inputs;
     const uuid = crypto.randomUUID();
 
     // Save information about the welcome message to the datastore
@@ -32,7 +36,7 @@ export default SlackFunction(
       typeof MeetingDatastore.definition
     >({
       datastore: MeetingDatastore.name,
-      item: { id: uuid, channel, timestamp },
+      item: { id: uuid, channel, timestamp, name },
     });
 
     if (!putResponse.ok) {
