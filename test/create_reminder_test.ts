@@ -18,6 +18,7 @@ mf.install();
 type ExpectedItemType = {
   id?: string;
   channel?: string;
+  meeting?: string;
   date?: number;
   message?: string;
   author?: string;
@@ -50,6 +51,7 @@ Deno.test("Successfully create a reminder", async () => {
 
   const inputs = {
     channel: "channel-id",
+    meeting: "meeting-id",
     date: date,
     message: "Test message",
     author: "author1",
@@ -83,6 +85,7 @@ Deno.test("Fail to create reminder", async () => {
   const date = Date.now();
   const inputs = {
     channel: "channel-id",
+    meeting: "meeting-id",
     date: date,
     message: "Test message",
     author: "author1",
