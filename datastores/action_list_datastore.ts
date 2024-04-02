@@ -1,10 +1,13 @@
 import { DefineDatastore, Schema } from "deno-slack-sdk/mod.ts";
 
-const ActionListDatastore = DefineDatastore({
+export const ActionListDatastore = DefineDatastore({
   name: "ActionList",
   primary_key: "id",
   attributes: {
     id: {
+      type: Schema.types.string,
+    },
+    meeting_id: {
       type: Schema.types.string,
     },
     assigned_to: {
@@ -17,12 +20,10 @@ const ActionListDatastore = DefineDatastore({
       type: Schema.types.string,
     },
     start_date: {
-      type: Schema.slack.types.date,
+      type: Schema.slack.types.timestamp,
     },
     end_date: {
-      type: Schema.slack.types.date,
+      type: Schema.slack.types.timestamp,
     },
   },
 });
-
-export default ActionListDatastore;

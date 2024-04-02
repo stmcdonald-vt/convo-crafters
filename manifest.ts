@@ -3,7 +3,7 @@ import { load } from "std/dotenv/mod.ts";
 
 // Datastores
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
-import ActionListDatastore from "./datastores/action_list_datastore.ts";
+import { ActionListDatastore } from "./datastores/action_list_datastore.ts";
 import { AgendaItemDatastore } from "./datastores/agenda_item_datastore.ts";
 import { MeetingDatastore } from "./datastores/meeting_datastore.ts";
 import { RemindersDatastore } from "./datastores/reminders.ts";
@@ -13,6 +13,7 @@ import RequestNextTopic from "./workflows/next_topic.ts";
 import { CreateReminder } from "./workflows/create_reminder.ts";
 import { CreateMeeting } from "./workflows/create_meeting.ts";
 import { CreateAgendaItem } from "./workflows/create_agenda_item.ts";
+import { CreateActionItem } from "./workflows/create_action_item.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
 
 // Types
@@ -38,6 +39,7 @@ export default Manifest({
   // A list of all workflows the app will use.
   workflows: [
     CreateAgendaItem,
+    CreateActionItem,
     CreateMeeting,
     CreatePoll,
     CreateReminder,
