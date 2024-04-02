@@ -34,7 +34,11 @@ export const FetchFutureMeetingsFunction = DefineFunction({
         type: Schema.slack.types.interactivity,
       },
     },
-    required: ["meetings"],
+    required: [
+      "meetings",
+      "meeting_enum_choices",
+      "meeting_ids",
+    ],
   },
 });
 
