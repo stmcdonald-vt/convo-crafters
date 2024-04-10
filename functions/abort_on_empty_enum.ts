@@ -1,6 +1,6 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { EnumChoice } from "../types/enum_choice.ts";
-import { DialogType, showDialog } from "./show_dialog.ts";
+import { dialogHelpers, DialogType } from "./show_dialog.ts";
 
 export const AbortOnEmptyEnumFunction = DefineFunction({
   callback_id: "abort_on_empty_enum",
@@ -40,7 +40,7 @@ export default SlackFunction(
     const { enum_choices, interactivity, error_message } = inputs;
 
     if (!enum_choices.length) {
-      await showDialog(
+      await dialogHelpers.showDialog(
         client,
         error_message,
         DialogType.Error,
