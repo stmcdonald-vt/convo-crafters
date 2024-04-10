@@ -93,7 +93,7 @@ Deno.test("Fail to save a meeting", async () => {
 });
 
 Deno.test("Fail to create a trigger", async () => {
-  mf.mock("POST@/api/workflows.triggers.create", async () => {
+  mf.mock("POST@/api/workflows.triggers.create", () => {
     return new Response(
       JSON.stringify({ ok: false, error: "a trigger error!" }),
     );
