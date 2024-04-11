@@ -41,6 +41,10 @@ export default SlackFunction(
       meeting.id === meeting_id
     );
 
-    return { outputs: { channel_id: selectedMeeting.channel_id } };
+    if (!selectedMeeting) {
+      return { error: "No meetings match the given id." };
+    }
+
+    return { outputs: { channel_id: selectedMeeting.channel } };
   },
 );
