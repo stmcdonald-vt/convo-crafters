@@ -19,6 +19,7 @@ import { CreatePoll } from "./workflows/create_poll.ts";
 import { EnumChoice } from "./types/enum_choice.ts";
 import { MeetingInfo } from "./types/meeting_info.ts";
 import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
+import { AgendaItemInfo } from "./types/agenda_item_info.ts";
 
 const env = await load();
 /**
@@ -62,6 +63,7 @@ export default Manifest({
   types: [
     EnumChoice,
     MeetingInfo,
+    AgendaItemInfo,
   ],
 
   /**
