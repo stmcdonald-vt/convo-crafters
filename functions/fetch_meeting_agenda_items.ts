@@ -9,14 +9,14 @@ export const FetchMeetingAgendaItemsFunction = DefineFunction({
   source_file: "functions/fetch_meeting_agenda_items.ts",
   input_parameters: {
     properties: {
-      interactivity: {
-        type: Schema.slack.types.interactivity,
-      },
       meeting_id: {
         type: Schema.types.string,
       },
+      interactivity: {
+        type: Schema.slack.types.interactivity,
+      },
     },
-    required: [],
+    required: ["meeting_id"],
   },
   output_parameters: {
     properties: {
