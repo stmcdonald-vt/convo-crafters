@@ -1,27 +1,23 @@
 import { DefineDatastore, Schema } from "deno-slack-sdk/mod.ts";
-import { SlackAPIClient } from "deno-slack-sdk/types.ts";
-import { DatastoreItem } from "deno-slack-api/types.ts";
 import { DatastoreQueryResponse } from "deno-slack-api/typed-method-types/apps.ts";
+import { DatastoreItem, SlackAPIClient } from "deno-slack-api/types.ts";
 
-export const MEETING_DATASTORE = "Meeting";
+const AGENDA_ITEM_DATSTORE = "AgendaItem";
 
-export const MeetingDatastore = DefineDatastore({
-  name: MEETING_DATASTORE,
+export const AgendaItemDatastore = DefineDatastore({
+  name: AGENDA_ITEM_DATSTORE,
   primary_key: "id",
   attributes: {
     id: {
       type: Schema.types.string,
     },
-    channel: {
-      type: Schema.slack.types.channel_id,
-    },
-    timestamp: {
-      type: Schema.slack.types.timestamp,
+    meeting_id: {
+      type: Schema.types.string,
     },
     name: {
       type: Schema.types.string,
     },
-    agenda_trigger: {
+    details: {
       type: Schema.types.string,
     },
   },
@@ -37,25 +33,28 @@ export const MeetingDatastore = DefineDatastore({
  * @returns items a list of responses from the datastore
  * @returns error the description of any server error
  */
-export async function queryMeetingDatastore(
+export async function queryAgendaItemDatastore(
   client: SlackAPIClient,
   expressions?: object,
 ): Promise<{
   ok: boolean;
-  items: DatastoreItem<typeof MeetingDatastore.definition>[];
+  items: DatastoreItem<typeof AgendaItemDatastore.definition>[];
   error?: string;
 }> {
-  const items: DatastoreItem<typeof MeetingDatastore.definition>[] = [];
+  const items: DatastoreItem<typeof AgendaItemDatastore.definition>[] = [];
   let cursor = undefined;
 
   // Page through the database and collect all meetings that match filter expressions
   do {
-    const meetings: DatastoreQueryResponse<typeof MeetingDatastore.definition> =
-      await client.apps.datastore.query<typeof MeetingDatastore.definition>({
-        datastore: MEETING_DATASTORE,
-        cursor,
-        ...expressions,
-      });
+    const meetings: DatastoreQueryResponse<
+      typeof AgendaItemDatastore.definition
+    > = await client.apps.datastore.query<
+      typeof AgendaItemDatastore.definition
+    >({
+      datastore: AGENDA_ITEM_DATSTORE,
+      cursor,
+      ...expressions,
+    });
 
     if (!meetings.ok) {
       return { ok: false, items, error: meetings.error };

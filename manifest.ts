@@ -4,7 +4,7 @@ import { load } from "std/dotenv/mod.ts";
 // Datastores
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import ActionListDatastore from "./datastores/action_list_datastore.ts";
-import AgendaDatastore from "./datastores/agenda_datastore.ts";
+import { AgendaItemDatastore } from "./datastores/agenda_item_datastore.ts";
 import { MeetingDatastore } from "./datastores/meeting_datastore.ts";
 import { RemindersDatastore } from "./datastores/reminders.ts";
 
@@ -12,11 +12,14 @@ import { RemindersDatastore } from "./datastores/reminders.ts";
 import RequestNextTopic from "./workflows/next_topic.ts";
 import { CreateReminder } from "./workflows/create_reminder.ts";
 import { CreateMeeting } from "./workflows/create_meeting.ts";
-import { CreateAgenda } from "./workflows/create_agenda.ts";
+import { CreateAgendaItem } from "./workflows/create_agenda_item.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
 
 // Types
-import { MeetingInfoType } from "./types/meeting_info.ts";
+import { EnumChoice } from "./types/enum_choice.ts";
+import { MeetingInfo } from "./types/meeting_info.ts";
+import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
+import { AgendaItemInfo } from "./types/agenda_item_info.ts";
 
 const env = await load();
 /**
@@ -36,11 +39,12 @@ export default Manifest({
 
   // A list of all workflows the app will use.
   workflows: [
-    CreateAgenda,
+    CreateAgendaItem,
     CreateMeeting,
     CreatePoll,
     CreateReminder,
     RequestNextTopic,
+    CreateAgendaItemForMeeting,
   ],
 
   // If your app communicates to any external domains, list them here.
@@ -50,14 +54,16 @@ export default Manifest({
   datastores: [
     SampleObjectDatastore,
     ActionListDatastore,
-    AgendaDatastore,
+    AgendaItemDatastore,
     RemindersDatastore,
     MeetingDatastore,
   ],
 
   // A list of custom Types the app will use
   types: [
-    MeetingInfoType,
+    EnumChoice,
+    MeetingInfo,
+    AgendaItemInfo,
   ],
 
   /**

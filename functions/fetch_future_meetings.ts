@@ -1,6 +1,7 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { queryMeetingDatastore } from "../datastores/meeting_datastore.ts";
-import { MeetingInfoType } from "../types/meeting_info.ts";
+import { EnumChoice } from "../types/enum_choice.ts";
+import { MeetingInfo } from "../types/meeting_info.ts";
 
 export const FetchFutureMeetingsFunction = DefineFunction({
   callback_id: "fetch_future_meetings_function",
@@ -8,25 +9,42 @@ export const FetchFutureMeetingsFunction = DefineFunction({
   description: "Fetch meetings that have not yet occurred",
   source_file: "functions/fetch_future_meetings.ts",
   input_parameters: {
-    properties: {},
+    properties: {
+      interactivity: {
+        type: Schema.slack.types.interactivity,
+      },
+    },
     required: [],
   },
   output_parameters: {
     properties: {
+      meeting_ids: {
+        type: Schema.types.array,
+        items: { type: Schema.types.string },
+      },
+      meeting_enum_choices: {
+        type: Schema.types.array,
+        items: { type: EnumChoice },
+      },
       meetings: {
         type: Schema.types.array,
-        items: { type: MeetingInfoType },
-        title: "Meetings",
-        description: "Meetings that are set for the future",
+        items: { type: MeetingInfo },
+      },
+      interactivity: {
+        type: Schema.slack.types.interactivity,
       },
     },
-    required: ["meetings"],
+    required: [
+      "meetings",
+      "meeting_enum_choices",
+      "meeting_ids",
+    ],
   },
 });
 
 export default SlackFunction(
   FetchFutureMeetingsFunction,
-  async ({ client }) => {
+  async ({ inputs, client }) => {
     const nowTimestampSeconds = Math.floor(Date.now() / 1000);
 
     // DynamoDB expression to represent "Timestamp in future"
@@ -38,24 +56,47 @@ export default SlackFunction(
       }, // Map query to current time
     };
 
-    const meetings = await queryMeetingDatastore(client, expressions);
+    const response = await queryMeetingDatastore(client, expressions);
 
-    if (!meetings.ok) {
+    if (!response.ok) {
       return {
         total: 0,
-        error: `Failed to fetch future meetings: ${meetings.error}`,
+        error: `Failed to fetch future meetings: ${response.error}`,
       };
     }
 
-    // Transform DB records to simplified MeetingInfo
-    const meetingInfo = meetings.items.map((meeting) => {
+    const sortedMeetings = response.items.toSorted((a, b) =>
+      a.timestamp - b.timestamp
+    );
+
+    // Transform into different usable outputs
+    const meetings = sortedMeetings.map((meeting) => {
       return {
         id: meeting.id,
+        name: meeting.name,
         channel: meeting.channel,
         timestamp: meeting.timestamp,
       };
     });
 
-    return { outputs: { meetings: meetingInfo } };
+    const meeting_enum_choices = sortedMeetings.map((meeting) => {
+      return {
+        value: meeting.id,
+        title: `${meeting.name} at ${
+          // Timestamp is in seconds and Date needs ms
+          new Date(meeting.timestamp * 1000).toLocaleString()}`,
+      };
+    });
+
+    const meeting_ids = sortedMeetings.map((meeting) => meeting.id);
+
+    return {
+      outputs: {
+        meetings,
+        meeting_enum_choices,
+        meeting_ids,
+        interactivity: inputs.interactivity,
+      },
+    };
   },
 );

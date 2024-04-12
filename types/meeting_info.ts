@@ -1,9 +1,9 @@
 import { DefineType, Schema } from "deno-slack-sdk/mod.ts";
 
-export const MeetingInfoType = DefineType({
+export const MeetingInfo = DefineType({
   title: "Meeting Info",
-  description: "Represents a planned meeting location and time",
-  name: "meeting",
+  description: "Meeting information that mirrors datastore.",
+  name: "meeting_info",
   type: Schema.types.object,
   properties: {
     id: {
@@ -15,6 +15,12 @@ export const MeetingInfoType = DefineType({
     timestamp: {
       type: Schema.slack.types.timestamp,
     },
+    name: {
+      type: Schema.types.string,
+    },
+    agenda_trigger: {
+      type: Schema.types.string,
+    },
   },
-  required: ["id", "channel", "timestamp"],
+  required: ["id", "channel", "timestamp", "name"],
 });
