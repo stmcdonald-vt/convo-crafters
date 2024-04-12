@@ -19,6 +19,9 @@ export const MeetingInfo = DefineType({
     name: {
       type: Schema.types.string,
     },
+    agenda_trigger: {
+      type: Schema.types.string,
+    },
     reminders: {
       type: Schema.types.array,
       items: { type: ReminderInfo },

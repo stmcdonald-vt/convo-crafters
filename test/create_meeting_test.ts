@@ -20,7 +20,15 @@ type ExpectedItemType = {
   channel?: string;
   timestamp?: number;
   name?: string;
+  agenda_trigger?: string;
 };
+
+// Successful trigger creation
+mf.mock("POST@/api/workflows.triggers.create", () => {
+  return new Response(
+    JSON.stringify({ ok: true, trigger: { shortcut_url: "trigger" } }),
+  );
+});
 
 Deno.test("Successfully save a meeting", async () => {
   let putDatastore;
@@ -50,7 +58,7 @@ Deno.test("Successfully save a meeting", async () => {
 
   // No error indicates our mocked put route was called
   assertEquals(error, undefined);
-  assertEquals(outputs, {});
+  assertEquals(outputs, { meeting: putItem });
 
   // Assert put payload
   assertEquals(putDatastore, MeetingDatastore.name);
@@ -59,6 +67,7 @@ Deno.test("Successfully save a meeting", async () => {
   assertEquals(putItem.channel, "channel-id");
   assertEquals(putItem.timestamp, 1710804);
   assertEquals(putItem.name, "meeting name");
+  assertEquals(putItem.agenda_trigger, "trigger");
 });
 
 Deno.test("Fail to save a meeting", async () => {
@@ -80,5 +89,26 @@ Deno.test("Fail to save a meeting", async () => {
 
   assertExists(error);
   assertStringIncludes(error, "datastore_error");
+  assertEquals(outputs, undefined);
+});
+
+Deno.test("Fail to create a trigger", async () => {
+  mf.mock("POST@/api/workflows.triggers.create", () => {
+    return new Response(
+      JSON.stringify({ ok: false, error: "a trigger error!" }),
+    );
+  });
+  const inputs = {
+    channel: "channel-id",
+    timestamp: 1710804,
+    name: "meeting name",
+  };
+
+  const { error, outputs } = await CreateMeetingFunction(
+    createContext({ inputs }),
+  );
+
+  assertExists(error);
+  assertStringIncludes(error, "a trigger error!");
   assertEquals(outputs, undefined);
 });
