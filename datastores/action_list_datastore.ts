@@ -47,7 +47,7 @@ export async function queryActionItemDatastore(
     > = await client.apps.datastore.query<
       typeof ActionListDatastore.definition
     >({
-      datastore: ACTION_ITEM_DATSTORE,
+      datastore: ACTION_ITEM_DATASTORE,
       cursor,
       ...expressions,
     });
