@@ -74,7 +74,14 @@ export default SlackFunction(
 
     // Save information about the meeting to the datastore
 
-    const item = { id: uuid, channel, timestamp, name, agenda_trigger };
+    const item = {
+      id: uuid,
+      channel,
+      timestamp,
+      name,
+      agenda_trigger,
+      reminders: [],
+    };
 
     const putResponse = await client.apps.datastore.put<
       typeof MeetingDatastore.definition
