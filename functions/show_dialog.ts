@@ -77,7 +77,7 @@ export default SlackFunction(
   async ({ inputs, client }) => {
     const { interactivity, dialogType, message } = inputs;
 
-    await showDialog(
+    await dialogHelpers.showDialog(
       client,
       message,
       dialogType as DialogType,
@@ -87,3 +87,5 @@ export default SlackFunction(
     return { outputs: {} };
   },
 );
+
+export const dialogHelpers = { showDialog };
