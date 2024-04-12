@@ -27,5 +27,5 @@ export const MeetingInfo = DefineType({
       items: { type: ReminderInfo },
     },
   },
-  required: ["id", "channel", "timestamp", "name", "reminders"],
+  required: ["id", "channel", "timestamp", "name"],
 });
