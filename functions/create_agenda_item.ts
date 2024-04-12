@@ -24,7 +24,7 @@ export const CreateAgendaItemSetupFunction = DefineFunction({
         type: Schema.slack.types.interactivity,
       },
     },
-    required: ["meeting_id", "name", "details", "interactivity"],
+    required: ["meeting_id", "name", "interactivity"],
   },
   output_parameters: {
     properties: {

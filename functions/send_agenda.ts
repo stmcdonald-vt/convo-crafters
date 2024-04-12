@@ -31,9 +31,15 @@ export default SlackFunction(
   async ({ inputs, client }) => {
     const { agenda_items, channel, thread_ts } = inputs;
 
-    const message = agenda_items.map((item) =>
-      agendaItemToMarkdownBullet(item.name, item.details)
-    ).join("\n");
+    let message = "";
+    if (agenda_items.length) {
+      message += "*Meeting Agenda:*\n";
+      message += agenda_items.map((item) =>
+        agendaItemToMarkdownBullet(item.name, item.details)
+      ).join("\n");
+    } else {
+      message += "This meeting does not have any agenda items.";
+    }
 
     if (channel && message) {
       await client.chat.postMessage({
@@ -48,9 +54,9 @@ export default SlackFunction(
 );
 
 function agendaItemToMarkdownBullet(name: string, details?: string) {
-  let item = `- ${name}`;
+  let item = `• ${name}`;
   if (details) {
-    item += `\n  - ${details}`;
+    item += `\n    • ${details}`;
   }
   return item;
 }

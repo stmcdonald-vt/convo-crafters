@@ -12,9 +12,6 @@ export const FetchMeetingAgendaItemsFunction = DefineFunction({
       meeting_id: {
         type: Schema.types.string,
       },
-      interactivity: {
-        type: Schema.slack.types.interactivity,
-      },
     },
     required: ["meeting_id"],
   },
@@ -67,7 +64,6 @@ export default SlackFunction(
     return {
       outputs: {
         agenda_items,
-        interactivity: inputs.interactivity,
       },
     };
   },

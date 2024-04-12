@@ -80,7 +80,7 @@ const SendMeetingStartedMessage = StartMeeting.addStep(
     channel_id: ChannelFromMeeting.outputs.channel_id,
     message:
       // Temporarily use meeting id here, need to expand channel_id_from_meeting to be meeting_info_from_meeting
-      `The meeting: "${SetupWorkflowForm.outputs.fields.meeting}" is starting! You can view the meeting agenda in this thread.`,
+      `The meeting "${ChannelFromMeeting.outputs.meeting_name}" is starting! You can view the meeting agenda in this thread.`,
   },
 );
 
