@@ -9,6 +9,9 @@ export const ReminderInfo = DefineType({
     id: {
       type: Schema.types.string,
     },
+    channel: {
+      type: Schema.slack.types.channel_id,
+    },
     date: {
       type: Schema.slack.types.timestamp,
     },
