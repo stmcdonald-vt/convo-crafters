@@ -40,13 +40,17 @@ export default SlackFunction(
     const { channel } = inputs;
     const nowTimestampSeconds = Math.floor(Date.now() / 1000);
 
-    // DynamoDB expression to represent "Timestamp in future"
+    // get reminders for a specific channel and in the future
     const expressions = {
-      expression: "#channel = :channel", // Logic to query for specific meeting
-      expression_attributes: { "#channel": "channel" }, // Map query to meeting_id field on Agenda Item record
+      expression: "#channel = :channel AND #timestamp > :nowTimestampSeconds", // Logic to query for specific channel and future reminders
+      expression_attributes: {
+        "#channel": "channel",
+        "#timestamp": "timestamp",
+      }, // Map query to channel and timestamp field on Reminder record
       expression_values: {
-        ":channel": inputs.channel,
-      }, // Map query to requested meeting id
+        ":channel": channel,
+        ":nowTimestampSeconds": nowTimestampSeconds,
+      },
     };
 
     const response = await queryRemindersDatastore(client, expressions);
@@ -58,15 +62,32 @@ export default SlackFunction(
       };
     }
 
-    const meeting = response.items.filter((meeting) =>
-      meeting.channel === channel
-    );
+    const reminders = response.items.map((item) => {
+      return {
+        id: item.id,
+        channel: item.channel,
+        date: item.date,
+        message: item.message,
+        author: item.author,
+      };
+    });
 
-    const reminders = meeting.reminders;
+    const reminder_enum_choices = reminders.map((reminder) => {
+      return {
+        value: reminder.id,
+        title: `${reminder.message} at ${
+          // Timestamp is in seconds and Date needs ms
+          new Date(reminder.date * 1000).toLocaleString()}`,
+      };
+    });
+
+    const reminder_ids = reminders.map((reminder) => reminder.id);
 
     return {
       outputs: {
-        reminders: reminders,
+        reminders,
+        reminder_enum_choices,
+        reminder_ids,
       },
     };
   },
