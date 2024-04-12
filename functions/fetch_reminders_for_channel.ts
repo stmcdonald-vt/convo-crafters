@@ -1,6 +1,6 @@
 import { ReminderInfo } from "../types/reminder_info.ts";
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { queryMeetingDatastore } from "../datastores/meeting_datastore.ts";
+import { queryRemindersDatastore } from "../datastores/reminders.ts";
 
 export const FetchRemindersForChannelFunction = DefineFunction({
   callback_id: "fetch_reminders_for_channel_function",
@@ -42,14 +42,14 @@ export default SlackFunction(
 
     // DynamoDB expression to represent "Timestamp in future"
     const expressions = {
-      expression: "#timestamp > :nowTimestampSeconds", // Logic to query future meetings
-      expression_attributes: { "#timestamp": "timestamp" }, // Map query to timestamp field on Meeting record
+      expression: "#channel = :channel", // Logic to query for specific meeting
+      expression_attributes: { "#channel": "channel" }, // Map query to meeting_id field on Agenda Item record
       expression_values: {
-        ":nowTimestampSeconds": nowTimestampSeconds,
-      }, // Map query to current time
+        ":channel": inputs.channel,
+      }, // Map query to requested meeting id
     };
 
-    const response = await queryMeetingDatastore(client, expressions);
+    const response = await queryRemindersDatastore(client, expressions);
 
     if (!response.ok) {
       return {
