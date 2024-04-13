@@ -35,7 +35,10 @@ Deno.test("Channel ID from meeting", async () => {
     createContext({ inputs }),
   );
 
-  assertEquals(outputs, { channel_id: "channel-id-2" });
+  assertEquals(outputs, {
+    channel_id: "channel-id-2",
+    meeting_name: "meeting 2",
+  });
   assertEquals(error, undefined);
 });
 
