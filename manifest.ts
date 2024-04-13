@@ -21,6 +21,8 @@ import { EnumChoice } from "./types/enum_choice.ts";
 import { MeetingInfo } from "./types/meeting_info.ts";
 import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
 import { AgendaItemInfo } from "./types/agenda_item_info.ts";
+import { Trigger } from "./types/trigger.ts";
+import ConfigureTriggers from "./workflows/configure_triggers.ts";
 
 const env = await load();
 /**
@@ -47,6 +49,7 @@ export default Manifest({
     RequestNextTopic,
     CreateAgendaItemForMeeting,
     StartMeeting,
+    ConfigureTriggers,
   ],
 
   // If your app communicates to any external domains, list them here.
@@ -66,6 +69,7 @@ export default Manifest({
     EnumChoice,
     MeetingInfo,
     AgendaItemInfo,
+    Trigger,
   ],
 
   /**
@@ -85,5 +89,7 @@ export default Manifest({
     "datastore:write",
     "triggers:write", // Create new Platform triggers
     "triggers:read", // Read new Platform triggers
+    "bookmarks:write",
+    "channels:join",
   ],
 });
