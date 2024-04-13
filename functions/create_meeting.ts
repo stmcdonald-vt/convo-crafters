@@ -80,7 +80,6 @@ export default SlackFunction(
       timestamp,
       name,
       agenda_trigger,
-      reminders: [],
     };
 
     const putResponse = await client.apps.datastore.put<

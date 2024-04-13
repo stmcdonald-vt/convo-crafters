@@ -25,10 +25,6 @@ export const MeetingDatastore = DefineDatastore({
     agenda_trigger: {
       type: Schema.types.string,
     },
-    reminders: {
-      type: Schema.types.array,
-      items: { type: ReminderInfo },
-    },
   },
 });
 
