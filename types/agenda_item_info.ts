@@ -19,5 +19,5 @@ export const AgendaItemInfo = DefineType({
       type: Schema.types.string,
     },
   },
-  required: ["id", "meeting_id", "name", "details"],
+  required: ["id", "meeting_id", "name"],
 });

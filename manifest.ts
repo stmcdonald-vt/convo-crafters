@@ -14,6 +14,7 @@ import { CreateReminder } from "./workflows/create_reminder.ts";
 import { CreateMeeting } from "./workflows/create_meeting.ts";
 import { CreateAgendaItem } from "./workflows/create_agenda_item.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
+import { StartMeeting } from "./workflows/start_meeting.ts";
 
 // Types
 import { EnumChoice } from "./types/enum_choice.ts";
@@ -45,6 +46,7 @@ export default Manifest({
     CreateReminder,
     RequestNextTopic,
     CreateAgendaItemForMeeting,
+    StartMeeting,
   ],
 
   // If your app communicates to any external domains, list them here.
