@@ -19,9 +19,9 @@ export const ActionListDatastore = DefineDatastore({
     status: {
       type: Schema.types.string,
     },
-    start_date: {
-      type: Schema.slack.types.timestamp,
-    },
+    // start_date: {
+    //   type: Schema.slack.types.timestamp,
+    // },
     end_date: {
       type: Schema.slack.types.timestamp,
     },

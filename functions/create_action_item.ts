@@ -8,6 +8,10 @@ export const CreateActionItemSetupFunction = DefineFunction({
   source_file: "functions/create_action_item.ts",
   input_parameters: {
     properties: {
+      meeting_id: {
+        type: Schema.types.string,
+        description: "Meeting to attach this action item to.",
+      },
       assigned_to: {
         type: Schema.slack.types.user_id,
         description: "The person this action item is assigned to.",
@@ -28,14 +32,14 @@ export const CreateActionItemSetupFunction = DefineFunction({
 export default SlackFunction(
   CreateActionItemSetupFunction,
   async ({ inputs, client }) => {
-    const { assigned_to, action, end_date } = inputs;
+    const { meeting_id, assigned_to, action, end_date } = inputs;
     const uuid = crypto.randomUUID();
 
     const putResponse = await client.apps.datastore.put<
       typeof ActionListDatastore.definition
     >({
       datastore: ActionListDatastore.name,
-      item: { id: uuid, assigned_to, action, end_date },
+      item: { id: uuid, meeting_id, assigned_to, action, end_date },
     });
 
     if (!putResponse.ok) {

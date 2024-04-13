@@ -1,5 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateActionItemSetupFunction } from "../functions/create_action_item.ts";
+import { FetchFutureMeetingsFunction } from "../functions/fetch_future_meetings.ts";
+import { AbortOnEmptyEnumFunction } from "../functions/abort_on_empty_enum.ts";
 
 export const CreateActionItem = DefineWorkflow({
   callback_id: "create_action_item",
@@ -18,16 +20,40 @@ export const CreateActionItem = DefineWorkflow({
   },
 });
 
+// Gather future meetings and pass through interactivity
+const futureMeetings = CreateActionItem.addStep(
+  FetchFutureMeetingsFunction,
+  { interactivity: CreateActionItem.inputs.interactivity },
+);
+
+// Check if meetings exist or not
+const enumCheck = CreateActionItem.addStep(
+  AbortOnEmptyEnumFunction,
+  {
+    enum_choices: futureMeetings.outputs.meeting_enum_choices,
+    interactivity: futureMeetings.outputs.interactivity,
+    error_message:
+      "No meetings were found. Please create a meeting before creating an action item.",
+  },
+);
+
 const SetupWorkflowForm = CreateActionItem.addStep(
   Schema.slack.functions.OpenForm,
   {
     title: "Create Action Item",
     submit_label: "Submit",
     description: ":wave: Add an action item.",
-    interactivity: CreateActionItem.inputs.interactivity,
+    interactivity: enumCheck.outputs.interactivity,
     fields: {
-      required: ["assignment", "action", "end date"],
+      required: ["meeting", "assignment", "action", "end date"],
       elements: [
+        {
+          name: "meeting",
+          title: "Select a Meeting this Action Item is ",
+          type: Schema.types.string,
+          enum: futureMeetings.outputs.meeting_ids,
+          choices: futureMeetings.outputs.meeting_enum_choices,
+        },
         {
           name: "assignment",
           title: "Provide who this action is assigned to",
@@ -40,7 +66,7 @@ const SetupWorkflowForm = CreateActionItem.addStep(
           long: true,
         },
         {
-          name: "date",
+          name: "end date",
           title: "Provide the date that this action needs to be finished by",
           type: Schema.slack.types.timestamp,
         },
@@ -52,7 +78,7 @@ const SetupWorkflowForm = CreateActionItem.addStep(
 CreateActionItem.addStep(CreateActionItemSetupFunction, {
   assigned_to: SetupWorkflowForm.outputs.fields.assignment,
   action: SetupWorkflowForm.outputs.fields.action,
-  end_date: SetupWorkflowForm.outputs.fields.date,
+  end_date: SetupWorkflowForm.outputs.fields.timestamp,
 });
 
 CreateActionItem.addStep(Schema.slack.functions.SendEphemeralMessage, {
