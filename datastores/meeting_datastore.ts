@@ -2,7 +2,6 @@ import { DefineDatastore, Schema } from "deno-slack-sdk/mod.ts";
 import { SlackAPIClient } from "deno-slack-sdk/types.ts";
 import { DatastoreItem } from "deno-slack-api/types.ts";
 import { DatastoreQueryResponse } from "deno-slack-api/typed-method-types/apps.ts";
-import { ReminderInfo } from "../types/reminder_info.ts";
 
 export const MEETING_DATASTORE = "Meeting";
 

@@ -1,5 +1,4 @@
 import { DefineType, Schema } from "deno-slack-sdk/mod.ts";
-import { ReminderInfo } from "./reminder_info.ts";
 
 export const MeetingInfo = DefineType({
   title: "Meeting Info",
