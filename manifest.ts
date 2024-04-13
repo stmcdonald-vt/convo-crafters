@@ -15,6 +15,7 @@ import { CreateMeeting } from "./workflows/create_meeting.ts";
 import { CreateAgendaItem } from "./workflows/create_agenda_item.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
 import { StartMeeting } from "./workflows/start_meeting.ts";
+import ConfigureTriggers from "./workflows/configure_triggers.ts";
 
 // Types
 import { EnumChoice } from "./types/enum_choice.ts";
@@ -22,7 +23,6 @@ import { MeetingInfo } from "./types/meeting_info.ts";
 import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
 import { AgendaItemInfo } from "./types/agenda_item_info.ts";
 import { Trigger } from "./types/trigger.ts";
-import ConfigureTriggers from "./workflows/configure_triggers.ts";
 
 const env = await load();
 /**
