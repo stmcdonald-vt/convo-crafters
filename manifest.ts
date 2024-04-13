@@ -70,7 +70,6 @@ export default Manifest({
     EnumChoice,
     MeetingInfo,
     AgendaItemInfo,
-    fetch_action_items,
     Trigger,
     ActionItemInfo,
   ],
