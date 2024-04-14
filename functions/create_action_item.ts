@@ -1,5 +1,6 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { ActionListDatastore } from "../datastores/action_list_datastore.ts";
+import { SlackAPIClient } from "deno-slack-sdk/types.ts";
 
 export const CreateActionItemSetupFunction = DefineFunction({
   callback_id: "create_action_item_setup_function",
@@ -46,6 +47,36 @@ export default SlackFunction(
       return { error: `Failed to create action item: ${putResponse.error}` };
     }
 
+    const setupResponse = await setupActionListReminder(
+      client,
+      assigned_to,
+      end_date,
+      "Reminder to Complete Task: " + action,
+    );
+    if (setupResponse.error) {
+      return { error: `Failed to setup reminder: ${setupResponse.error}` };
+    }
+
     return { outputs: {} };
   },
 );
+
+export async function setupActionListReminder(
+  client: SlackAPIClient,
+  channel: string,
+  date: number,
+  message: string,
+): Promise<{ ok: boolean; error?: string }> {
+  try {
+    const result = await client.chat.scheduleMessage({
+      channel: channel,
+      text: message,
+      post_at: date,
+    });
+    console.log(result);
+    return { ok: true };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, error: error.message };
+  }
+}
