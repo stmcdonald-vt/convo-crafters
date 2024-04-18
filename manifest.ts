@@ -3,7 +3,7 @@ import { load } from "std/dotenv/mod.ts";
 
 // Datastores
 import SampleObjectDatastore from "./datastores/sample_datastore.ts";
-import ActionListDatastore from "./datastores/action_list_datastore.ts";
+import { ActionListDatastore } from "./datastores/action_list_datastore.ts";
 import { AgendaItemDatastore } from "./datastores/agenda_item_datastore.ts";
 import { MeetingDatastore } from "./datastores/meeting_datastore.ts";
 import { RemindersDatastore } from "./datastores/reminders.ts";
@@ -22,6 +22,7 @@ import { EnumChoice } from "./types/enum_choice.ts";
 import { MeetingInfo } from "./types/meeting_info.ts";
 import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
 import { AgendaItemInfo } from "./types/agenda_item_info.ts";
+import { ActionItemInfo } from "./types/action_item_info.ts";
 import { Trigger } from "./types/trigger.ts";
 
 const env = await load();
@@ -70,6 +71,7 @@ export default Manifest({
     MeetingInfo,
     AgendaItemInfo,
     Trigger,
+    ActionItemInfo,
   ],
 
   /**
