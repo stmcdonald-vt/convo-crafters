@@ -15,10 +15,15 @@ import { CreateMeeting } from "./workflows/create_meeting.ts";
 import { CreateAgendaItem } from "./workflows/create_agenda_item.ts";
 import { CreateActionItem } from "./workflows/create_action_item.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
+import { StartMeeting } from "./workflows/start_meeting.ts";
+import ConfigureTriggers from "./workflows/configure_triggers.ts";
 
 // Types
 import { EnumChoice } from "./types/enum_choice.ts";
 import { MeetingInfo } from "./types/meeting_info.ts";
+import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
+import { AgendaItemInfo } from "./types/agenda_item_info.ts";
+import { Trigger } from "./types/trigger.ts";
 
 const env = await load();
 /**
@@ -44,6 +49,9 @@ export default Manifest({
     CreatePoll,
     CreateReminder,
     RequestNextTopic,
+    CreateAgendaItemForMeeting,
+    StartMeeting,
+    ConfigureTriggers,
   ],
 
   // If your app communicates to any external domains, list them here.
@@ -62,6 +70,8 @@ export default Manifest({
   types: [
     EnumChoice,
     MeetingInfo,
+    AgendaItemInfo,
+    Trigger,
   ],
 
   /**
@@ -81,5 +91,7 @@ export default Manifest({
     "datastore:write",
     "triggers:write", // Create new Platform triggers
     "triggers:read", // Read new Platform triggers
+    "bookmarks:write",
+    "channels:join",
   ],
 });

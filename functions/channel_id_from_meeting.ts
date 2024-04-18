@@ -1,7 +1,7 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { MeetingInfo } from "../types/meeting_info.ts";
 
-// Note: I ended up not using this, but I think it will be useful when starting a meeting is added.
+// This should be updated to MeetingInfoFromMeeting in the near future.
 export const ChannelIdFromMeetingFunction = DefineFunction({
   callback_id: "channel_id_from_meeting",
   title: "Get Channel ID from Meeting",
@@ -16,7 +16,9 @@ export const ChannelIdFromMeetingFunction = DefineFunction({
       },
       meetings: {
         type: Schema.types.array,
-        items: MeetingInfo,
+        items: {
+          type: MeetingInfo,
+        },
         description: "List of pre-fetched meetings",
       },
     },
@@ -25,6 +27,9 @@ export const ChannelIdFromMeetingFunction = DefineFunction({
   output_parameters: {
     properties: {
       channel_id: {
+        type: Schema.types.string,
+      },
+      meeting_name: {
         type: Schema.types.string,
       },
     },
@@ -41,6 +46,15 @@ export default SlackFunction(
       meeting.id === meeting_id
     );
 
-    return { outputs: { channel_id: selectedMeeting.channel_id } };
+    if (!selectedMeeting) {
+      return { error: "No meetings match the given id." };
+    }
+
+    return {
+      outputs: {
+        channel_id: selectedMeeting.channel,
+        meeting_name: selectedMeeting.name,
+      },
+    };
   },
 );
