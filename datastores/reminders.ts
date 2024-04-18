@@ -19,6 +19,9 @@ export const RemindersDatastore = DefineDatastore({
     channel: {
       type: Schema.slack.types.channel_id,
     },
+    meeting_id: {
+      type: Schema.types.string,
+    },
     date: {
       type: Schema.slack.types.timestamp,
     },
