@@ -13,6 +13,10 @@ export const CreateReminderSetupFunction = DefineFunction({
         type: Schema.slack.types.channel_id,
         description: "Channel to post in",
       },
+      meeting_id: {
+        type: Schema.types.string,
+        description: "Meeting to attach this reminder to.",
+      },
       date: {
         type: Schema.slack.types.timestamp,
         description: "Date to send the reminder",
@@ -27,14 +31,14 @@ export const CreateReminderSetupFunction = DefineFunction({
           "The user ID of the person who created the meeting reminder",
       },
     },
-    required: ["channel", "date", "message", "author"],
+    required: ["channel", "meeting_id", "date", "message", "author"],
   },
 });
 
 export default SlackFunction(
   CreateReminderSetupFunction,
   async ({ inputs, client }) => {
-    const { channel, date, message, author } = inputs;
+    const { channel, meeting_id, date, message, author } = inputs;
     const uuid = crypto.randomUUID();
 
     // Save information about the welcome message to the datastore
@@ -42,7 +46,7 @@ export default SlackFunction(
       typeof RemindersDatastore.definition
     >({
       datastore: RemindersDatastore.name,
-      item: { id: uuid, channel, date, message, author },
+      item: { id: uuid, channel, meeting_id, date, message, author },
     });
 
     if (!putResponse.ok) {

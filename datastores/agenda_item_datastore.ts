@@ -2,10 +2,10 @@ import { DefineDatastore, Schema } from "deno-slack-sdk/mod.ts";
 import { DatastoreQueryResponse } from "deno-slack-api/typed-method-types/apps.ts";
 import { DatastoreItem, SlackAPIClient } from "deno-slack-api/types.ts";
 
-const AGENDA_ITEM_DATSTORE = "AgendaItem";
+const AGENDA_ITEM_DATASTORE = "AgendaItem";
 
 export const AgendaItemDatastore = DefineDatastore({
-  name: AGENDA_ITEM_DATSTORE,
+  name: AGENDA_ITEM_DATASTORE,
   primary_key: "id",
   attributes: {
     id: {
@@ -51,7 +51,7 @@ export async function queryAgendaItemDatastore(
     > = await client.apps.datastore.query<
       typeof AgendaItemDatastore.definition
     >({
-      datastore: AGENDA_ITEM_DATSTORE,
+      datastore: AGENDA_ITEM_DATASTORE,
       cursor,
       ...expressions,
     });
