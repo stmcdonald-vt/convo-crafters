@@ -20,7 +20,7 @@ export const CreateActionItem = DefineWorkflow({
   },
 });
 
-// Gather future meetings and pass through interactivity
+// Gather past meetings and pass through interactivity
 const pastMeetings = CreateActionItem.addStep(
   FetchPastMeetingsFunction,
   { interactivity: CreateActionItem.inputs.interactivity },
@@ -61,6 +61,11 @@ const SetupWorkflowForm = CreateActionItem.addStep(
         },
         {
           name: "action",
+          title: "Provide name of the action that is needed to be done",
+          type: Schema.types.string,
+        },
+        {
+          name: "details",
           title: "Provide details of the action that is needed to be done",
           type: Schema.types.string,
           long: true,
@@ -76,8 +81,10 @@ const SetupWorkflowForm = CreateActionItem.addStep(
 );
 
 CreateActionItem.addStep(CreateActionItemSetupFunction, {
+  meeting_id: SetupWorkflowForm.outputs.fields.meeting,
   assigned_to: SetupWorkflowForm.outputs.fields.assignment,
   action: SetupWorkflowForm.outputs.fields.action,
+  details: SetupWorkflowForm.outputs.fields.details,
   end_date: SetupWorkflowForm.outputs.fields.timestamp,
 });
 

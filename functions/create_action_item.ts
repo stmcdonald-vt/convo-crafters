@@ -21,26 +21,30 @@ export const CreateActionItemSetupFunction = DefineFunction({
         type: Schema.types.string,
         description: "The action required to be completed for this item.",
       },
+      details: {
+        type: Schema.types.string,
+        description: "The details of the action.",
+      },
       end_date: {
         type: Schema.slack.types.timestamp,
         description: "The date that this action should be completed by.",
       },
     },
-    required: ["assigned_to", "action", "end_date"],
+    required: ["assigned_to", "action", "details", "end_date"],
   },
 });
 
 export default SlackFunction(
   CreateActionItemSetupFunction,
   async ({ inputs, client }) => {
-    const { meeting_id, assigned_to, action, end_date } = inputs;
+    const { meeting_id, assigned_to, action, details, end_date } = inputs;
     const uuid = crypto.randomUUID();
 
     const putResponse = await client.apps.datastore.put<
       typeof ActionListDatastore.definition
     >({
       datastore: ActionListDatastore.name,
-      item: { id: uuid, meeting_id, assigned_to, action, end_date },
+      item: { id: uuid, meeting_id, assigned_to, name, details, end_date },
     });
 
     if (!putResponse.ok) {
