@@ -1,6 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateActionItemSetupFunction } from "../functions/create_action_item.ts";
-import { FetchFutureMeetingsFunction } from "../functions/fetch_future_meetings.ts";
+import { FetchPastMeetingsFunction } from "../functions/fetch_past_meeting.ts";
 import { AbortOnEmptyEnumFunction } from "../functions/abort_on_empty_enum.ts";
 
 export const CreateActionItem = DefineWorkflow({
@@ -21,8 +21,8 @@ export const CreateActionItem = DefineWorkflow({
 });
 
 // Gather future meetings and pass through interactivity
-const futureMeetings = CreateActionItem.addStep(
-  FetchFutureMeetingsFunction,
+const pastMeetings = CreateActionItem.addStep(
+  FetchPastMeetingsFunction,
   { interactivity: CreateActionItem.inputs.interactivity },
 );
 
@@ -30,8 +30,8 @@ const futureMeetings = CreateActionItem.addStep(
 const enumCheck = CreateActionItem.addStep(
   AbortOnEmptyEnumFunction,
   {
-    enum_choices: futureMeetings.outputs.meeting_enum_choices,
-    interactivity: futureMeetings.outputs.interactivity,
+    enum_choices: pastMeetings.outputs.meeting_enum_choices,
+    interactivity: pastMeetings.outputs.interactivity,
     error_message:
       "No meetings were found. Please create a meeting before creating an action item.",
   },
@@ -51,8 +51,8 @@ const SetupWorkflowForm = CreateActionItem.addStep(
           name: "meeting",
           title: "Select a Meeting this Action Item is ",
           type: Schema.types.string,
-          enum: futureMeetings.outputs.meeting_ids,
-          choices: futureMeetings.outputs.meeting_enum_choices,
+          enum: pastMeetings.outputs.meeting_ids,
+          choices: pastMeetings.outputs.meeting_enum_choices,
         },
         {
           name: "assignment",
