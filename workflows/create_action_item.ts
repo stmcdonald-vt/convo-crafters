@@ -1,6 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateActionItemSetupFunction } from "../functions/create_action_item.ts";
-import { FetchFutureMeetingsFunction } from "../functions/fetch_future_meetings.ts";
+import { FetchPastMeetingsFunction } from "../functions/fetch_past_meetings.ts";
 import { AbortOnEmptyEnumFunction } from "../functions/abort_on_empty_enum.ts";
 
 export const CreateActionItem = DefineWorkflow({
@@ -22,7 +22,7 @@ export const CreateActionItem = DefineWorkflow({
 
 // Gather future meetings and pass through interactivity
 const futureMeetings = CreateActionItem.addStep(
-  FetchFutureMeetingsFunction,
+  FetchPastMeetingsFunction,
   { interactivity: CreateActionItem.inputs.interactivity },
 );
 
