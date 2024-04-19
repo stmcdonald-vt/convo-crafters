@@ -23,6 +23,7 @@ import { EnumChoice } from "./types/enum_choice.ts";
 import { MeetingInfo } from "./types/meeting_info.ts";
 import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
 import { AgendaItemInfo } from "./types/agenda_item_info.ts";
+import { ActionItemInfo } from "./types/action_item_info.ts";
 import { Trigger } from "./types/trigger.ts";
 
 const env = await load();
@@ -72,6 +73,7 @@ export default Manifest({
     MeetingInfo,
     AgendaItemInfo,
     Trigger,
+    ActionItemInfo,
   ],
 
   /**

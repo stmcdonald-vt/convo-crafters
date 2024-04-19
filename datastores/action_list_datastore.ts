@@ -2,8 +2,10 @@ import { DefineDatastore, Schema } from "deno-slack-sdk/mod.ts";
 import { DatastoreQueryResponse } from "deno-slack-api/typed-method-types/apps.ts";
 import { DatastoreItem, SlackAPIClient } from "deno-slack-api/types.ts";
 
+const ACTION_ITEM_DATASTORE = "ActionItem";
+
 export const ActionListDatastore = DefineDatastore({
-  name: "ActionList",
+  name: ACTION_ITEM_DATASTORE,
   primary_key: "id",
   attributes: {
     id: {
@@ -15,7 +17,10 @@ export const ActionListDatastore = DefineDatastore({
     assigned_to: {
       type: Schema.slack.types.user_id,
     },
-    action: {
+    name: { // the action
+      type: Schema.types.string,
+    },
+    details: {
       type: Schema.types.string,
     },
     status: {
@@ -30,16 +35,6 @@ export const ActionListDatastore = DefineDatastore({
   },
 });
 
-/**
- * Returns the complete collection from the datastore for an expression
- *
- * @param client the client to interact with the Slack API
- * @param expressions optional DynamoDB filters and attributes to refine a query ()
- *
- * @returns ok if the query completed successfully
- * @returns items a list of responses from the datastore
- * @returns error the description of any server error
- */
 export async function queryActionItemDatastore(
   client: SlackAPIClient,
   expressions?: object,
@@ -58,7 +53,7 @@ export async function queryActionItemDatastore(
     > = await client.apps.datastore.query<
       typeof ActionListDatastore.definition
     >({
-      datastore: "ActionList",
+      datastore: ACTION_ITEM_DATASTORE,
       cursor,
       ...expressions,
     });

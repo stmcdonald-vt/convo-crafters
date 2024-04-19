@@ -12,21 +12,12 @@ export const ActionItemInfo = DefineType({
     meeting_id: {
       type: Schema.types.string,
     },
-    assigned_to: {
-      type: Schema.slack.types.user_id,
-    },
-    action: {
+    name: {
       type: Schema.types.string,
     },
-    status: {
+    details: {
       type: Schema.types.string,
-    },
-    // start_date: {
-    //   type: Schema.slack.types.timestamp,
-    // },
-    end_date: {
-      type: Schema.slack.types.timestamp,
     },
   },
-  required: ["id", "meeting_id", "assigned_to", "action", "end_date"],
+  required: ["id", "meeting_id", "name", "details"],
 });
