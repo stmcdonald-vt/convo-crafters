@@ -7,6 +7,7 @@ import { ActionListDatastore } from "./datastores/action_list_datastore.ts";
 import { AgendaItemDatastore } from "./datastores/agenda_item_datastore.ts";
 import { MeetingDatastore } from "./datastores/meeting_datastore.ts";
 import { RemindersDatastore } from "./datastores/reminders.ts";
+import { UserLockDatastore } from "./datastores/user_lock_datastore.ts";
 
 // Workflows
 import RequestNextTopic from "./workflows/next_topic.ts";
@@ -63,6 +64,7 @@ export default Manifest({
     AgendaItemDatastore,
     RemindersDatastore,
     MeetingDatastore,
+    UserLockDatastore,
   ],
 
   // A list of custom Types the app will use
