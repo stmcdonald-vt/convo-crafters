@@ -45,7 +45,7 @@ const SetupWorkflowForm = CreateActionItem.addStep(
     description: ":wave: Add an action item.",
     interactivity: enumCheck.outputs.interactivity,
     fields: {
-      required: ["meeting", "assignment", "action", "end date"],
+      required: ["meeting", "assignment", "action", "date"],
       elements: [
         {
           name: "meeting",
@@ -71,7 +71,7 @@ const SetupWorkflowForm = CreateActionItem.addStep(
           long: true,
         },
         {
-          name: "end date",
+          name: "date",
           title: "Provide the date that this action needs to be finished by",
           type: Schema.slack.types.timestamp,
         },
@@ -85,7 +85,7 @@ CreateActionItem.addStep(CreateActionItemSetupFunction, {
   assigned_to: SetupWorkflowForm.outputs.fields.assignment,
   action: SetupWorkflowForm.outputs.fields.action,
   details: SetupWorkflowForm.outputs.fields.details,
-  end_date: SetupWorkflowForm.outputs.fields.timestamp,
+  end_date: SetupWorkflowForm.outputs.fields.date,
 });
 
 CreateActionItem.addStep(Schema.slack.functions.SendEphemeralMessage, {

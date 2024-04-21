@@ -47,9 +47,9 @@ export default SlackFunction(
   async ({ inputs, client }) => {
     const nowTimestampSeconds = Math.floor(Date.now() / 1000);
 
-    // DynamoDB expression to represent "Timestamp in future"
+    // DynamoDB expression to represent "Timestamp in past"
     const expressions = {
-      expression: "#timestamp <= :nowTimestampSeconds", // Logic to query future meetings
+      expression: "#timestamp <= :nowTimestampSeconds", // Logic to query past meetings
       expression_attributes: { "#timestamp": "timestamp" }, // Map query to timestamp field on Meeting record
       expression_values: {
         ":nowTimestampSeconds": nowTimestampSeconds,
