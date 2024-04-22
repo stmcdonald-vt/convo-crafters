@@ -1,0 +1,15 @@
+name: Force-Deploy Slack App
+
+on:
+  workflow_dispatch: # Manually triggered
+
+jobs:
+  force-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Force-Deploy Slack App
+      run: slack deploy --app ${{ secrets.APP }} --team ${{ secrets.TEAM }} --token ${{ secrets.SLACK_SERVICE_TOKEN }} --force
