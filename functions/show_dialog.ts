@@ -4,6 +4,7 @@ import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 export enum DialogType {
   Error = "error",
   Success = "success",
+  RateLimit = "ratelimit",
 }
 
 export async function showDialog(
@@ -15,6 +16,7 @@ export async function showDialog(
   const titleMapping = {
     error: "Something Went Wrong!",
     success: "Success!",
+    ratelimit: "Too Many Requests",
   };
   // Open a new modal with the end-user who interacted with the link trigger
   await client.views.open({
