@@ -50,8 +50,6 @@ const formData = RequestNextTopic.addStep(
 const LockCheck = RequestNextTopic.addStep(CheckNextTopicLock, {
   interactivity: formData.outputs.interactivity,
   speaker_id: formData.outputs.fields.speaker,
-  error_message:
-    "The speaker has already received a request to move to the next topic. Please wait before sending another request.",
 });
 
 // Step 3: send next topic request details along with approve/deny buttons to speaker
@@ -60,6 +58,7 @@ RequestNextTopic.addStep(SendRequestToSpeakerFunction, {
   listener: RequestNextTopic.inputs.interactivity.interactor.id,
   speaker: formData.outputs.fields.speaker,
   reason: formData.outputs.fields.reason,
+  speaker_locked: LockCheck.outputs.result,
 });
 
 export default RequestNextTopic;

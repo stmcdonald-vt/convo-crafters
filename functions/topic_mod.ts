@@ -3,6 +3,7 @@ import { SlackFunction } from "deno-slack-sdk/mod.ts";
 import { APPROVE_ID, DENY_ID } from "../constants/topic_constants.ts";
 import nextTopicRequestHeaderBlocks from "./topic_blocks.ts";
 import { UserLockDatastore } from "../datastores/user_lock_datastore.ts";
+import { DialogType, showDialog } from "./show_dialog.ts";
 
 // Custom function that sends a message to the current speaker asking
 // to move on to the next topic. The message includes some Block Kit with two
@@ -10,6 +11,17 @@ import { UserLockDatastore } from "../datastores/user_lock_datastore.ts";
 export default SlackFunction(
   SendRequestToSpeakerFunction,
   async ({ inputs, client }) => {
+    // Rate limit requests
+    if (inputs.speaker_locked) {
+      await showDialog(
+        client,
+        "The speaker has already received a request to move to the next topic. Please wait before sending another request.",
+        DialogType.RateLimit,
+        inputs.interactivity?.interactivity_pointer,
+      );
+      return { outputs: {} };
+    }
+
     console.log("Forwarding the request:", inputs);
 
     // Create a block of Block Kit elements composed of header blocks

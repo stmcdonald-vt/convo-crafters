@@ -1,12 +1,10 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { DialogType, showDialog } from "./show_dialog.ts";
 import { queryUserLockDatastore } from "../datastores/user_lock_datastore.ts";
 
 export const CheckNextTopicLock = DefineFunction({
   callback_id: "check_next_topic_lock",
   title: "Check Next Topic Lock",
-  description:
-    "Gracefully abort workflow if supplied speaker has an active next topic lock.",
+  description: "Check if supplied speaker has an active next topic lock.",
   source_file: "functions/check_next_topic_lock.ts",
   input_parameters: {
     properties: {
@@ -17,27 +15,26 @@ export const CheckNextTopicLock = DefineFunction({
         type: Schema.types.string,
         description: "List enum choices",
       },
-      error_message: {
-        type: Schema.types.string,
-        description: "Message to show if lock is active.",
-      },
     },
-    required: ["speaker_id", "error_message", "interactivity"],
+    required: ["speaker_id", "interactivity"],
   },
   output_parameters: {
     properties: {
       interactivity: {
         type: Schema.slack.types.interactivity,
       },
+      result: {
+        type: Schema.types.boolean,
+      },
     },
-    required: [],
+    required: ["result"],
   },
 });
 
 export default SlackFunction(
   CheckNextTopicLock,
   async ({ inputs, client }) => {
-    const { speaker_id, interactivity, error_message } = inputs;
+    const { speaker_id, interactivity } = inputs;
 
     const nowTimestampSeconds = Math.floor(Date.now() / 1000);
 
@@ -63,17 +60,8 @@ export default SlackFunction(
       };
     }
 
-    if (response.items.length) {
-      await showDialog(
-        client,
-        error_message,
-        DialogType.Error,
-        interactivity?.interactivity_pointer,
-      );
+    const result = !!response.items.length;
 
-      return { error: `Speaker has an active lock.` };
-    } else {
-      return { outputs: { interactivity } };
-    }
+    return { outputs: { interactivity, result } };
   },
 );
