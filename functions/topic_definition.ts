@@ -27,6 +27,10 @@ export const SendRequestToSpeakerFunction = DefineFunction({
         type: Schema.types.string,
         description: "Your reason for wanting to move to the next topic",
       },
+      speaker_locked: {
+        type: Schema.types.boolean,
+        description: "Whether or not the speaker is locked to prevent spam.",
+      },
     },
     required: [
       "speaker",
