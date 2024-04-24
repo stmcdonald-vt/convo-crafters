@@ -1,6 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateActionItemSetupFunction } from "../functions/create_action_item.ts";
-import { FetchPastMeetingsFunction } from "../functions/fetch_past_meeting.ts";
+import { FetchPastMeetingsFunction } from "../functions/fetch_past_meetings.ts";
 import { AbortOnEmptyEnumFunction } from "../functions/abort_on_empty_enum.ts";
 
 export const CreateActionItem = DefineWorkflow({
