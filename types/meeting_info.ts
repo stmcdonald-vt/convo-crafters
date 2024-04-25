@@ -1,5 +1,4 @@
 import { DefineType, Schema } from "deno-slack-sdk/mod.ts";
-import { ReminderInfo } from "./reminder_info.ts";
 
 export const MeetingInfo = DefineType({
   title: "Meeting Info",
@@ -22,10 +21,6 @@ export const MeetingInfo = DefineType({
     agenda_trigger: {
       type: Schema.types.string,
     },
-    reminders: {
-      type: Schema.types.array,
-      items: { type: ReminderInfo },
-    },
   },
-  required: ["id", "channel", "timestamp", "name", "reminders"],
+  required: ["id", "channel", "timestamp", "name"],
 });

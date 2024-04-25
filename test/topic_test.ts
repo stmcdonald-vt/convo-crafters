@@ -6,6 +6,10 @@ import handler from "../functions/topic_mod.ts";
 // Replaces globalThis.fetch with the mocked copy
 mf.install();
 
+mf.mock("POST@/api/apps.datastore.put", () => {
+  return new Response(JSON.stringify({ ok: true }));
+});
+
 mf.mock("POST@/api/chat.postMessage", async (req) => {
   const body = await req.formData();
   if (body.get("channel")?.toString() !== "U11111") {

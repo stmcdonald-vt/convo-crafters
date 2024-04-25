@@ -48,7 +48,7 @@ export default SlackFunction(
         "#timestamp": "timestamp",
       }, // Map query to channel and timestamp field on Reminder record
       expression_values: {
-        ":channel": inputs.channel,
+        ":channel": channel,
         ":nowTimestampSeconds": nowTimestampSeconds,
       },
     };

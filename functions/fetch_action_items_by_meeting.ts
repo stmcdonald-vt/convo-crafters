@@ -1,58 +1,61 @@
 import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
-import { queryAgendaItemDatastore } from "../datastores/agenda_item_datastore.ts";
-import { AgendaItemInfo } from "../types/agenda_item_info.ts";
+import { queryActionItemDatastore } from "../datastores/action_list_datastore.ts";
+import { ActionItemInfo } from "../types/action_item_info.ts";
 
-export const FetchMeetingAgendaItemsFunction = DefineFunction({
-  callback_id: "fetch_meeting_agenda_items",
-  title: "Fetch Meeting Agenda Items",
-  description: "Fetch agenda items",
-  source_file: "functions/fetch_meeting_agenda_items.ts",
+export const FetchActionItemsFunction = DefineFunction({
+  callback_id: "fetch_action_items_function",
+  title: "Fetch Meeting Action Items",
+  description: "Fetch action items",
+  source_file: "functions/fetch_action_items_by_meeting.ts",
   input_parameters: {
     properties: {
+      interactivity: {
+        type: Schema.slack.types.interactivity,
+      },
       meeting_id: {
         type: Schema.types.string,
       },
     },
-    required: ["meeting_id"],
+    required: [],
   },
   output_parameters: {
     properties: {
-      agenda_items: {
+      action_items: {
         type: Schema.types.array,
-        items: { type: AgendaItemInfo },
+        items: { type: ActionItemInfo },
       },
       interactivity: {
         type: Schema.slack.types.interactivity,
       },
     },
     required: [
-      "agenda_items",
+      "action_items",
     ],
   },
 });
 
 export default SlackFunction(
-  FetchMeetingAgendaItemsFunction,
+  FetchActionItemsFunction,
   async ({ inputs, client }) => {
     const expressions = {
       expression: "#meeting = :meetingId", // Logic to query for specific meeting
-      expression_attributes: { "#meeting": "meeting_id" }, // Map query to meeting_id field on Agenda Item record
+      expression_attributes: { "#meeting": "meeting_id" }, // Map query to meeting_id field on Action Item record
       expression_values: {
         ":meetingId": inputs.meeting_id,
       }, // Map query to requested meeting id
     };
 
-    const response = await queryAgendaItemDatastore(client, expressions);
+    const response = await queryActionItemDatastore(client, expressions);
 
     if (!response.ok) {
       return {
         total: 0,
-        error: `Failed to fetch Meeting Agenda Items: ${response.error}`,
+        error: `Failed to fetch Meeting Action Items: ${response.error}`,
       };
     }
 
     // Transform into different usable outputs
-    const agenda_items = response.items.map((item) => {
+    const action_items = response.items.map((item) => {
       return {
         id: item.id,
         meeting_id: item.meeting_id,
@@ -63,7 +66,8 @@ export default SlackFunction(
 
     return {
       outputs: {
-        agenda_items,
+        action_items,
+        interactivity: inputs.interactivity,
       },
     };
   },

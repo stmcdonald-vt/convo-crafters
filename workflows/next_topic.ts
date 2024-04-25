@@ -1,5 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { SendRequestToSpeakerFunction } from "../functions/topic_definition.ts";
+import { CheckNextTopicLock } from "../functions/check_next_topic_lock.ts";
 
 /**
  * A Workflow composed of two steps: asking for details from the user,
@@ -45,12 +46,19 @@ const formData = RequestNextTopic.addStep(
   },
 );
 
-// Step 2: send next topic request details along with approve/deny buttons to speaker
-RequestNextTopic.addStep(SendRequestToSpeakerFunction, {
+// Step 2: check if speaker has an active lock preventing them from receiving another request.
+const LockCheck = RequestNextTopic.addStep(CheckNextTopicLock, {
   interactivity: formData.outputs.interactivity,
+  speaker_id: formData.outputs.fields.speaker,
+});
+
+// Step 3: send next topic request details along with approve/deny buttons to speaker
+RequestNextTopic.addStep(SendRequestToSpeakerFunction, {
+  interactivity: LockCheck.outputs.interactivity,
   listener: RequestNextTopic.inputs.interactivity.interactor.id,
   speaker: formData.outputs.fields.speaker,
   reason: formData.outputs.fields.reason,
+  speaker_locked: LockCheck.outputs.result,
 });
 
 export default RequestNextTopic;

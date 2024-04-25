@@ -1,5 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateReminderSetupFunction } from "../functions/create_reminder.ts";
+import { FetchFutureMeetingsFunction } from "../functions/fetch_future_meetings.ts";
 
 export const CreateReminder = DefineWorkflow({
   callback_id: "create_reminder",
@@ -18,15 +19,21 @@ export const CreateReminder = DefineWorkflow({
   },
 });
 
+// Gather future meetings and pass through interactivity
+const futureMeetings = CreateReminder.addStep(
+  FetchFutureMeetingsFunction,
+  { interactivity: CreateReminder.inputs.interactivity },
+);
+
 const SetupWorkflowForm = CreateReminder.addStep(
   Schema.slack.functions.OpenForm,
   {
     title: "Create Reminder Form",
     submit_label: "Submit",
     description: ":wave: Create a meeting reminder.",
-    interactivity: CreateReminder.inputs.interactivity,
+    interactivity: futureMeetings.outputs.interactivity,
     fields: {
-      required: ["channel", "date", "message"],
+      required: ["channel", "meeting", "date"],
       elements: [
         {
           name: "channel",
@@ -35,13 +42,20 @@ const SetupWorkflowForm = CreateReminder.addStep(
           default: CreateReminder.inputs.channel,
         },
         {
+          name: "meeting",
+          title: "Select a meeting",
+          type: Schema.types.string,
+          enum: futureMeetings.outputs.meeting_ids,
+          choices: futureMeetings.outputs.meeting_enum_choices,
+        },
+        {
           name: "date",
           title: "Select a time to send the meeting reminder",
           type: Schema.slack.types.timestamp,
         },
         {
-          name: "message",
-          title: "Input a message for the reminder.",
+          name: "messageInput",
+          title: "Input a message for the reminder",
           type: Schema.types.string,
           long: true,
         },
@@ -57,6 +71,7 @@ const SetupWorkflowForm = CreateReminder.addStep(
  */
 CreateReminder.addStep(CreateReminderSetupFunction, {
   channel: SetupWorkflowForm.outputs.fields.channel,
+  meeting_id: SetupWorkflowForm.outputs.fields.meeting,
   date: SetupWorkflowForm.outputs.fields.date,
   message: SetupWorkflowForm.outputs.fields.messageInput,
   author: CreateReminder.inputs.interactivity.interactor.id,

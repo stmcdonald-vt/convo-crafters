@@ -2,6 +2,8 @@ import { SendRequestToSpeakerFunction } from "./topic_definition.ts";
 import { SlackFunction } from "deno-slack-sdk/mod.ts";
 import { APPROVE_ID, DENY_ID } from "../constants/topic_constants.ts";
 import nextTopicRequestHeaderBlocks from "./topic_blocks.ts";
+import { UserLockDatastore } from "../datastores/user_lock_datastore.ts";
+import { DialogType, showDialog } from "./show_dialog.ts";
 
 // Custom function that sends a message to the current speaker asking
 // to move on to the next topic. The message includes some Block Kit with two
@@ -9,6 +11,17 @@ import nextTopicRequestHeaderBlocks from "./topic_blocks.ts";
 export default SlackFunction(
   SendRequestToSpeakerFunction,
   async ({ inputs, client }) => {
+    // Rate limit requests
+    if (inputs.speaker_locked) {
+      await showDialog(
+        client,
+        "The speaker has already received a request to move to the next topic. Please wait before sending another request.",
+        DialogType.RateLimit,
+        inputs.interactivity?.interactivity_pointer,
+      );
+      return { outputs: {} };
+    }
+
     console.log("Forwarding the request:", inputs);
 
     // Create a block of Block Kit elements composed of header blocks
@@ -48,6 +61,27 @@ export default SlackFunction(
 
     if (!msgResponse.ok) {
       console.log("Error during request chat.postMessage!", msgResponse.error);
+    }
+
+    // Create a lock to prevent the speaker from getting bombarded by requests
+    const nowTimestampSeconds = Math.floor(Date.now() / 1000);
+    const lockDurationSeconds = 100;
+
+    const item = {
+      id: crypto.randomUUID(),
+      user_id: inputs.speaker,
+      expires_at: nowTimestampSeconds + lockDurationSeconds,
+    };
+
+    const putLockResponse = await client.apps.datastore.put<
+      typeof UserLockDatastore.definition
+    >({
+      datastore: UserLockDatastore.name,
+      item,
+    });
+
+    if (!putLockResponse.ok) {
+      console.log("Error during lock creation!", putLockResponse.error);
     }
 
     // IMPORTANT! Set `completed` to false in order to keep the interactivity
