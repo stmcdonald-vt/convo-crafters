@@ -32,6 +32,9 @@ export const ChannelIdFromMeetingFunction = DefineFunction({
       meeting_name: {
         type: Schema.types.string,
       },
+      meeting: {
+        type: MeetingInfo,
+      },
     },
     required: ["channel_id"],
   },
@@ -54,6 +57,7 @@ export default SlackFunction(
       outputs: {
         channel_id: selectedMeeting.channel,
         meeting_name: selectedMeeting.name,
+        meeting: selectedMeeting,
       },
     };
   },

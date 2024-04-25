@@ -76,6 +76,8 @@ export default SlackFunction(
         name: meeting.name,
         channel: meeting.channel,
         timestamp: meeting.timestamp,
+        agenda_trigger: meeting.agenda_trigger,
+        action_trigger: meeting.action_trigger,
       };
     });
 

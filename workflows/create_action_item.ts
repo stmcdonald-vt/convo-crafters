@@ -86,6 +86,7 @@ CreateActionItem.addStep(CreateActionItemSetupFunction, {
   action: SetupWorkflowForm.outputs.fields.action,
   details: SetupWorkflowForm.outputs.fields.details,
   end_date: SetupWorkflowForm.outputs.fields.date,
+  interactivity: SetupWorkflowForm.outputs.interactivity,
 });
 
 CreateActionItem.addStep(Schema.slack.functions.SendEphemeralMessage, {

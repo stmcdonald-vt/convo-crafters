@@ -29,15 +29,33 @@ export const CreateActionItemSetupFunction = DefineFunction({
         type: Schema.slack.types.timestamp,
         description: "The date that this action should be completed by.",
       },
+      interactivity: {
+        type: Schema.slack.types.interactivity,
+      },
     },
     required: ["assigned_to", "action", "details", "end_date"],
+  },
+  output_parameters: {
+    properties: {
+      interactivity: {
+        type: Schema.slack.types.interactivity,
+      },
+    },
+    required: [],
   },
 });
 
 export default SlackFunction(
   CreateActionItemSetupFunction,
   async ({ inputs, client }) => {
-    const { meeting_id, assigned_to, action, details, end_date } = inputs;
+    const {
+      meeting_id,
+      assigned_to,
+      action,
+      details,
+      end_date,
+      interactivity,
+    } = inputs;
     const uuid = crypto.randomUUID();
 
     const putResponse = await client.apps.datastore.put<
@@ -61,7 +79,7 @@ export default SlackFunction(
       return { error: `Failed to setup reminder: ${setupResponse.error}` };
     }
 
-    return { outputs: {} };
+    return { outputs: { interactivity } };
   },
 );
 

@@ -95,12 +95,16 @@ Deno.test("Fetches only future meetings", async () => {
       ],
       meetings: [
         {
+          action_trigger: undefined,
+          agenda_trigger: undefined,
           id: "future-meeting-id-2",
           channel: "channel-id",
           timestamp: 1711000002,
           name: "future meeting 2",
         },
         {
+          action_trigger: undefined,
+          agenda_trigger: undefined,
           id: "future-meeting-id-1",
           channel: "channel-id",
           timestamp: 1711000003,
