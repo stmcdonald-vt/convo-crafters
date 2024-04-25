@@ -11,6 +11,9 @@ export const ActionListDatastore = DefineDatastore({
     id: {
       type: Schema.types.string,
     },
+    meeting_id: {
+      type: Schema.types.string,
+    },
     assigned_to: {
       type: Schema.slack.types.user_id,
     },
@@ -23,14 +26,8 @@ export const ActionListDatastore = DefineDatastore({
     status: {
       type: Schema.types.string,
     },
-    start_date: {
-      type: Schema.slack.types.date,
-    },
     end_date: {
-      type: Schema.slack.types.date,
-    },
-    meeting_id: {
-      type: Schema.types.string,
+      type: Schema.slack.types.timestamp,
     },
   },
 });

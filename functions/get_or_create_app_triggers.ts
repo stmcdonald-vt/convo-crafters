@@ -4,7 +4,9 @@ import createAgendaItemTrigger from "../triggers/create_agenda_item_trigger.ts";
 import createReminderTrigger from "../triggers/create_reminder_trigger.ts";
 import startMeetingTrigger from "../triggers/start_meeting_trigger.ts";
 import nextTopicTrigger from "../triggers/topic_trigger.ts";
+
 import { Trigger } from "../types/trigger.ts";
+import createActionItemTrigger from "../triggers/create_action_item_trigger.ts";
 
 const appTriggers = [
   createMeetingTrigger,
@@ -12,6 +14,7 @@ const appTriggers = [
   createReminderTrigger,
   startMeetingTrigger,
   nextTopicTrigger,
+  createActionItemTrigger,
 ];
 
 export const GetOrCreateAppTriggers = DefineFunction({
