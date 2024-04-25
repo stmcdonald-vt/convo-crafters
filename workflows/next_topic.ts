@@ -4,7 +4,7 @@ import { CheckNextTopicLock } from "../functions/check_next_topic_lock.ts";
 
 /**
  * A Workflow composed of two steps: asking for details from the user,
- * and then forward the details along with two buttons (approve and deny) to the selected speaker.
+ * and then forward the details along with an acknowledge button to the selected speaker.
  */
 export const RequestNextTopic = DefineWorkflow({
   callback_id: "next_topic",
@@ -52,7 +52,7 @@ const LockCheck = RequestNextTopic.addStep(CheckNextTopicLock, {
   speaker_id: formData.outputs.fields.speaker,
 });
 
-// Step 3: send next topic request details along with approve/deny buttons to speaker
+// Step 3: send next topic request details along with acknowledge button to speaker
 RequestNextTopic.addStep(SendRequestToSpeakerFunction, {
   interactivity: LockCheck.outputs.interactivity,
   listener: RequestNextTopic.inputs.interactivity.interactor.id,

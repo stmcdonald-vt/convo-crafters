@@ -25,7 +25,7 @@ export default SlackFunction(
     console.log("Forwarding the request:", inputs);
 
     // Create a block of Block Kit elements composed of header blocks
-    // plus the interactive approve/deny buttons at the end
+    // plus the acknowledge button
     const blocks = nextTopicRequestHeaderBlocks(inputs).concat([{
       "type": "actions",
       "block_id": "approve-deny-buttons",
@@ -34,19 +34,10 @@ export default SlackFunction(
           type: "button",
           text: {
             type: "plain_text",
-            text: "Approve",
+            text: "Acknowledge",
           },
-          action_id: APPROVE_ID, // <-- important! we will differentiate between buttons using these IDs
+          action_id: APPROVE_ID,
           style: "primary",
-        },
-        {
-          type: "button",
-          text: {
-            type: "plain_text",
-            text: "Deny",
-          },
-          action_id: DENY_ID, // <-- important! we will differentiate between buttons using these IDs
-          style: "danger",
         },
       ],
     }]);
@@ -56,7 +47,7 @@ export default SlackFunction(
       channel: inputs.speaker,
       blocks,
       // Fallback text to use when rich media can't be displayed (i.e. notifications) as well as for screen readers
-      text: "A listener has request to move on to the next topic.",
+      text: "A listener has requested to move on to the next topic.",
     });
 
     if (!msgResponse.ok) {
@@ -83,10 +74,6 @@ export default SlackFunction(
     if (!putLockResponse.ok) {
       console.log("Error during lock creation!", putLockResponse.error);
     }
-
-    // IMPORTANT! Set `completed` to false in order to keep the interactivity
-    // points (the approve/deny buttons) "alive"
-    // We will set the function's complete state in the button handlers below.
     return {
       completed: false,
     };
@@ -101,8 +88,6 @@ export default SlackFunction(
   async function ({ action, body, client }) {
     console.log("Incoming action handler invocation", action);
 
-    const approved = action.action_id === APPROVE_ID;
-
     // Send speaker's response as a message to listener
     const msgResponse = await client.chat.postMessage({
       channel: body.function_data.inputs.listener,
@@ -111,18 +96,12 @@ export default SlackFunction(
         elements: [
           {
             type: "mrkdwn",
-            text: `Your request to move on to the next topic ` +
-              `${
-                body.function_data.inputs.reason
-                  ? ` for ${body.function_data.inputs.reason}`
-                  : ""
-              } was ${
-                approved ? " :white_check_mark: Approved" : ":x: Denied"
-              } by <@${body.user.id}>`,
+            text:
+              `Your request to move on to the next topic was acknowledged by <@${body.user.id}>`,
           },
         ],
       }],
-      text: `Your request was ${approved ? "approved" : "denied"}!`,
+      text: `Your request was acknowledged!`,
     });
     if (!msgResponse.ok) {
       console.log(
@@ -143,9 +122,7 @@ export default SlackFunction(
           elements: [
             {
               type: "mrkdwn",
-              text: `${
-                approved ? " :white_check_mark: Approved" : ":x: Denied"
-              }`,
+              text: "Acknowledged",
             },
           ],
         },
