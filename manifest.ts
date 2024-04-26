@@ -18,11 +18,12 @@ import { CreateActionItem } from "./workflows/create_action_item.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
 import { StartMeeting } from "./workflows/start_meeting.ts";
 import ConfigureTriggers from "./workflows/configure_triggers.ts";
+import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
+import CreateActionItemForMeeting from "./workflows/create_action_item_for_meeting.ts";
 
 // Types
 import { EnumChoice } from "./types/enum_choice.ts";
 import { MeetingInfo } from "./types/meeting_info.ts";
-import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
 import { AgendaItemInfo } from "./types/agenda_item_info.ts";
 import { ActionItemInfo } from "./types/action_item_info.ts";
 import { Trigger } from "./types/trigger.ts";
@@ -54,6 +55,7 @@ export default Manifest({
     CreateAgendaItemForMeeting,
     StartMeeting,
     ConfigureTriggers,
+    CreateActionItemForMeeting,
   ],
 
   // If your app communicates to any external domains, list them here.

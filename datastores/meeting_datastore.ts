@@ -24,6 +24,9 @@ export const MeetingDatastore = DefineDatastore({
     agenda_trigger: {
       type: Schema.types.string,
     },
+    action_trigger: {
+      type: Schema.types.string,
+    },
   },
 });
 

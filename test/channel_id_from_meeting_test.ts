@@ -38,6 +38,12 @@ Deno.test("Channel ID from meeting", async () => {
   assertEquals(outputs, {
     channel_id: "channel-id-2",
     meeting_name: "meeting 2",
+    meeting: {
+      id: "meeting-id-2",
+      channel: "channel-id-2",
+      timestamp: 1711000001,
+      name: "meeting 2",
+    },
   });
   assertEquals(error, undefined);
 });
