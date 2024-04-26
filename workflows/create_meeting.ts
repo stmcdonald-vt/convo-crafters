@@ -1,6 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateMeetingSetupFunction } from "../functions/create_meeting.ts";
 import { RequestAgendaSuggestions } from "../functions/request_agenda_suggestions.ts";
+import { RequestReminders } from "../functions/request_reminders.ts";
 
 export const CreateMeeting = DefineWorkflow({
   callback_id: "create_meeting",
@@ -64,11 +65,16 @@ const SendConfirmationMessage = CreateMeeting.addStep(
   {
     channel_id: SetupWorkflowForm.outputs.fields.channel,
     message:
-      `The meeting "${SetupWorkflowForm.outputs.fields.name}" was created! Please provide agenda item suggestions using the button in this thread.`,
+      `The meeting "${SetupWorkflowForm.outputs.fields.name}" was created! Please provide agenda item suggestions and reminders using the buttons in this thread.`,
   },
 );
 
 CreateMeeting.addStep(RequestAgendaSuggestions, {
+  meeting: CreatedMeeting.outputs.meeting,
+  thread_ts: SendConfirmationMessage.outputs.message_context.message_ts,
+});
+
+CreateMeeting.addStep(RequestReminders, {
   meeting: CreatedMeeting.outputs.meeting,
   thread_ts: SendConfirmationMessage.outputs.message_context.message_ts,
 });

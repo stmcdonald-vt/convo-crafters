@@ -20,6 +20,7 @@ import { StartMeeting } from "./workflows/start_meeting.ts";
 import ConfigureTriggers from "./workflows/configure_triggers.ts";
 import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
 import CreateActionItemForMeeting from "./workflows/create_action_item_for_meeting.ts";
+import CreateReminderForMeeting from "./workflows/create_reminder_for_meeting.ts";
 
 // Types
 import { EnumChoice } from "./types/enum_choice.ts";
@@ -56,6 +57,7 @@ export default Manifest({
     StartMeeting,
     ConfigureTriggers,
     CreateActionItemForMeeting,
+    CreateReminderForMeeting,
   ],
 
   // If your app communicates to any external domains, list them here.

@@ -25,20 +25,26 @@ export const CreateReminderSetupFunction = DefineFunction({
         type: Schema.types.string,
         description: "The meeting reminder message",
       },
-      author: {
-        type: Schema.slack.types.user_id,
-        description:
-          "The user ID of the person who created the meeting reminder",
+      interactivity: {
+        type: Schema.slack.types.interactivity,
       },
     },
-    required: ["channel", "meeting_id", "date", "message", "author"],
+    required: ["channel", "meeting_id", "date", "message", "interactivity"],
+  },
+  output_parameters: {
+    properties: {
+      interactivity: {
+        type: Schema.slack.types.interactivity,
+      },
+    },
+    required: ["interactivity"],
   },
 });
 
 export default SlackFunction(
   CreateReminderSetupFunction,
   async ({ inputs, client }) => {
-    const { channel, meeting_id, date, message, author } = inputs;
+    const { channel, meeting_id, date, message, interactivity } = inputs;
     const uuid = crypto.randomUUID();
 
     // Save information about the welcome message to the datastore
@@ -46,7 +52,7 @@ export default SlackFunction(
       typeof RemindersDatastore.definition
     >({
       datastore: RemindersDatastore.name,
-      item: { id: uuid, channel, meeting_id, date, message, author },
+      item: { id: uuid, channel, meeting_id, date, message },
     });
 
     if (!putResponse.ok) {
@@ -63,7 +69,7 @@ export default SlackFunction(
       return { error: `Failed to setup reminder: ${setupResponse.error}` };
     }
 
-    return { outputs: {} };
+    return { outputs: { interactivity } };
   },
 );
 

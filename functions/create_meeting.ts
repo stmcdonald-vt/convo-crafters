@@ -5,6 +5,7 @@ import { TriggerContextData, TriggerTypes } from "deno-slack-api/mod.ts";
 import { MeetingInfo } from "../types/meeting_info.ts";
 import { SlackAPIClient } from "deno-slack-sdk/deps.ts";
 import CreateActionItemForMeeting from "../workflows/create_action_item_for_meeting.ts";
+import CreateReminderForMeeting from "../workflows/create_reminder_for_meeting.ts";
 
 export const CreateMeetingSetupFunction = DefineFunction({
   callback_id: "create_meeting_setup_function",
@@ -65,6 +66,19 @@ export default SlackFunction(
     }
     const action_trigger = actionTriggerResponse.trigger?.shortcut_url;
 
+    const reminderTriggerResponse = await createMeetingReminder(
+      client,
+      uuid,
+      name,
+    );
+    if (!reminderTriggerResponse.ok) {
+      return {
+        error:
+          `Failed to create agenda trigger: ${reminderTriggerResponse.error}`,
+      };
+    }
+    const reminder_trigger = reminderTriggerResponse.trigger?.shortcut_url;
+
     // Save information about the meeting to the datastore
 
     const item = {
@@ -74,6 +88,7 @@ export default SlackFunction(
       name,
       agenda_trigger,
       action_trigger,
+      reminder_trigger,
     };
 
     const putResponse = await client.apps.datastore.put<
@@ -132,6 +147,33 @@ async function createActionTrigger(
     description: `Add an action item to the meeting: ${meeting_name}`,
     workflow:
       `#/workflows/${CreateActionItemForMeeting.definition.callback_id}`,
+    inputs: {
+      interactivity: {
+        value: TriggerContextData.Shortcut.interactivity,
+      },
+      channel: {
+        value: TriggerContextData.Shortcut.channel_id,
+      },
+      meeting_id: {
+        value: meeting_id,
+      },
+    },
+  });
+  return triggerResponse;
+}
+
+async function createMeetingReminder(
+  client: SlackAPIClient,
+  meeting_id: string,
+  meeting_name: string,
+) {
+  const triggerResponse = await client.workflows.triggers.create<
+    typeof CreateReminderForMeeting.definition
+  >({
+    type: TriggerTypes.Shortcut,
+    name: "Add reminder to meeting",
+    description: `Add a reminder to the meeting: ${meeting_name}`,
+    workflow: `#/workflows/${CreateReminderForMeeting.definition.callback_id}`,
     inputs: {
       interactivity: {
         value: TriggerContextData.Shortcut.interactivity,
