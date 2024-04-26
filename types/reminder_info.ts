@@ -22,5 +22,5 @@ export const ReminderInfo = DefineType({
       type: Schema.slack.types.user_id,
     },
   },
-  required: ["id", "channel", "date", "name"],
+  required: ["id", "channel", "date", "message"],
 });
