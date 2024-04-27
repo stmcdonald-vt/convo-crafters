@@ -74,7 +74,7 @@ CreateReminder.addStep(CreateReminderSetupFunction, {
   meeting_id: SetupWorkflowForm.outputs.fields.meeting,
   date: SetupWorkflowForm.outputs.fields.date,
   message: SetupWorkflowForm.outputs.fields.messageInput,
-  author: CreateReminder.inputs.interactivity.interactor.id,
+  interactivity: SetupWorkflowForm.outputs.interactivity,
 });
 
 /**

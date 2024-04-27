@@ -21,6 +21,8 @@ type ExpectedItemType = {
   timestamp?: number;
   name?: string;
   agenda_trigger?: string;
+  action_trigger?: string;
+  reminder_trigger?: string;
 };
 
 // Successful trigger creation

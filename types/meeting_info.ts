@@ -21,6 +21,12 @@ export const MeetingInfo = DefineType({
     agenda_trigger: {
       type: Schema.types.string,
     },
+    action_trigger: {
+      type: Schema.types.string,
+    },
+    reminder_trigger: {
+      type: Schema.types.string,
+    },
   },
   required: ["id", "channel", "timestamp", "name"],
 });

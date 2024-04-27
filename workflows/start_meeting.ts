@@ -4,7 +4,7 @@ import { AbortOnEmptyEnumFunction } from "../functions/abort_on_empty_enum.ts";
 import { ChannelIdFromMeetingFunction } from "../functions/channel_id_from_meeting.ts";
 import { FetchMeetingAgendaItemsFunction } from "../functions/fetch_meeting_agenda_items.ts";
 import { SendAgendaFunction } from "../functions/send_agenda.ts";
-
+import { RequestActionItems } from "../functions/request_action_items.ts";
 export const StartMeeting = DefineWorkflow({
   callback_id: "start_meeting",
   title: "Start a Meeting",
@@ -79,7 +79,7 @@ const SendMeetingStartedMessage = StartMeeting.addStep(
   {
     channel_id: ChannelFromMeeting.outputs.channel_id,
     message:
-      `The meeting "${ChannelFromMeeting.outputs.meeting_name}" is starting! You can view the meeting agenda in this thread.`,
+      `The meeting "${ChannelFromMeeting.outputs.meeting_name}" is starting! You can view the meeting agenda and add action items in this thread.`,
   },
 );
 
@@ -88,6 +88,14 @@ StartMeeting.addStep(
   {
     agenda_items: FetchedAgendaItems.outputs.agenda_items,
     channel: ChannelFromMeeting.outputs.channel_id,
+    thread_ts: SendMeetingStartedMessage.outputs.message_context.message_ts,
+  },
+);
+
+StartMeeting.addStep(
+  RequestActionItems,
+  {
+    meeting: ChannelFromMeeting.outputs.meeting,
     thread_ts: SendMeetingStartedMessage.outputs.message_context.message_ts,
   },
 );

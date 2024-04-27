@@ -28,9 +28,6 @@ export const RemindersDatastore = DefineDatastore({
     message: {
       type: Schema.types.string,
     },
-    author: {
-      type: Schema.slack.types.user_id,
-    },
   },
 });
 

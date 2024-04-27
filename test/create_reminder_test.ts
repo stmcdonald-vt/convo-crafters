@@ -21,7 +21,15 @@ type ExpectedItemType = {
   meeting?: string;
   date?: number;
   message?: string;
-  author?: string;
+  interactivity?: string;
+};
+
+const interactivity = {
+  interactivity_pointer: "111.222.b79....",
+  interactor: {
+    id: "U33333",
+    secret: "NDE0NTIxNDg....",
+  },
 };
 
 Deno.test("Successfully create a reminder", async () => {
@@ -54,7 +62,7 @@ Deno.test("Successfully create a reminder", async () => {
     date: date,
     meeting_id: "meeting-id",
     message: "Test message",
-    author: "author1",
+    interactivity: interactivity,
   };
 
   const { error, outputs } = await CreateReminderFunction(
@@ -63,7 +71,7 @@ Deno.test("Successfully create a reminder", async () => {
 
   // No error indicates our mocked put route was called
   assertEquals(error, undefined);
-  assertEquals(outputs, {});
+  assertEquals(outputs, { interactivity });
 
   // Assert put payload
   assertEquals(putDatastore, RemindersDatastore.name);
@@ -72,7 +80,6 @@ Deno.test("Successfully create a reminder", async () => {
   assertEquals(putItem.channel, "channel-id");
   assertEquals(putItem.date, date);
   assertEquals(putItem.message, "Test message");
-  assertEquals(putItem.author, "author1");
   assertEquals(message, "Test message");
 });
 
@@ -88,7 +95,7 @@ Deno.test("Fail to create reminder", async () => {
     date: date,
     meeting_id: "meeting-id",
     message: "Test message",
-    author: "author1",
+    interactivity: interactivity,
   };
 
   const { error, outputs } = await CreateReminderFunction(

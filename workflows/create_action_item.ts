@@ -20,8 +20,8 @@ export const CreateActionItem = DefineWorkflow({
   },
 });
 
-// Gather future meetings and pass through interactivity
-const futureMeetings = CreateActionItem.addStep(
+// Gather past meetings and pass through interactivity
+const pastMeetings = CreateActionItem.addStep(
   FetchPastMeetingsFunction,
   { interactivity: CreateActionItem.inputs.interactivity },
 );
@@ -30,8 +30,8 @@ const futureMeetings = CreateActionItem.addStep(
 const enumCheck = CreateActionItem.addStep(
   AbortOnEmptyEnumFunction,
   {
-    enum_choices: futureMeetings.outputs.meeting_enum_choices,
-    interactivity: futureMeetings.outputs.interactivity,
+    enum_choices: pastMeetings.outputs.meeting_enum_choices,
+    interactivity: pastMeetings.outputs.interactivity,
     error_message:
       "No meetings were found. Please create a meeting before creating an action item.",
   },
@@ -45,14 +45,14 @@ const SetupWorkflowForm = CreateActionItem.addStep(
     description: ":wave: Add an action item.",
     interactivity: enumCheck.outputs.interactivity,
     fields: {
-      required: ["meeting", "assignment", "action", "end date"],
+      required: ["meeting", "assignment", "action", "date"],
       elements: [
         {
           name: "meeting",
           title: "Select a Meeting this Action Item is ",
           type: Schema.types.string,
-          enum: futureMeetings.outputs.meeting_ids,
-          choices: futureMeetings.outputs.meeting_enum_choices,
+          enum: pastMeetings.outputs.meeting_ids,
+          choices: pastMeetings.outputs.meeting_enum_choices,
         },
         {
           name: "assignment",
@@ -61,12 +61,17 @@ const SetupWorkflowForm = CreateActionItem.addStep(
         },
         {
           name: "action",
+          title: "Provide name of the action that is needed to be done",
+          type: Schema.types.string,
+        },
+        {
+          name: "details",
           title: "Provide details of the action that is needed to be done",
           type: Schema.types.string,
           long: true,
         },
         {
-          name: "end date",
+          name: "date",
           title: "Provide the date that this action needs to be finished by",
           type: Schema.slack.types.timestamp,
         },
@@ -76,9 +81,12 @@ const SetupWorkflowForm = CreateActionItem.addStep(
 );
 
 CreateActionItem.addStep(CreateActionItemSetupFunction, {
+  meeting_id: SetupWorkflowForm.outputs.fields.meeting,
   assigned_to: SetupWorkflowForm.outputs.fields.assignment,
   action: SetupWorkflowForm.outputs.fields.action,
-  end_date: SetupWorkflowForm.outputs.fields.timestamp,
+  details: SetupWorkflowForm.outputs.fields.details,
+  end_date: SetupWorkflowForm.outputs.fields.date,
+  interactivity: SetupWorkflowForm.outputs.interactivity,
 });
 
 CreateActionItem.addStep(Schema.slack.functions.SendEphemeralMessage, {

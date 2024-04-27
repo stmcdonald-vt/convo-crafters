@@ -68,7 +68,6 @@ export default SlackFunction(
         channel: item.channel,
         date: item.date,
         message: item.message,
-        author: item.author,
       };
     });
 
