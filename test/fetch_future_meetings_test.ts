@@ -95,6 +95,7 @@ Deno.test("Fetches only future meetings", async () => {
       ],
       meetings: [
         {
+          reminder_trigger: undefined,
           action_trigger: undefined,
           agenda_trigger: undefined,
           id: "future-meeting-id-2",
@@ -103,6 +104,7 @@ Deno.test("Fetches only future meetings", async () => {
           name: "future meeting 2",
         },
         {
+          reminder_trigger: undefined,
           action_trigger: undefined,
           agenda_trigger: undefined,
           id: "future-meeting-id-1",
