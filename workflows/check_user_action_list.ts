@@ -1,6 +1,6 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
-import { AbortOnEmptyEnumFunction } from "../functions/abort_on_empty_enum.ts";
-import { FetchFutureMeetingsFunction } from "../functions/fetch_future_meetings.ts";
+// import { AbortOnEmptyEnumFunction } from "../functions/abort_on_empty_enum.ts";
+// import { FetchFutureMeetingsFunction } from "../functions/fetch_future_meetings.ts";
 import { FetchUserActionItemsFunction } from "../functions/fetch_action_item.ts";
 import { SendActionFunction } from "../functions/send_action_list.ts";
 
@@ -21,27 +21,26 @@ export const CheckUser = DefineWorkflow({
   },
 });
 
-//Change to fetach all possible action lists
-const futureMeetings = CheckUser.addStep(
-  FetchFutureMeetingsFunction,
-  { interactivity: CheckUser.inputs.interactivity },
-);
-const enumCheck = CheckUser.addStep(
-  AbortOnEmptyEnumFunction,
-  {
-    enum_choices: futureMeetings.outputs.meeting_enum_choices,
-    interactivity: futureMeetings.outputs.interactivity,
-    error_message:
-      "No meetings were found. Please create a meeting before starting one.",
-  },
-);
+// const futureMeetings = CheckUser.addStep(
+//   FetchFutureMeetingsFunction,
+//   { interactivity: CheckUser.inputs.interactivity },
+// );
+// const enumCheck = CheckUser.addStep(
+//   AbortOnEmptyEnumFunction,
+//   {
+//     enum_choices: futureMeetings.outputs.meeting_enum_choices,
+//     interactivity: futureMeetings.outputs.interactivity,
+//     error_message:
+//       "No meetings were found. Please create a meeting before starting one.",
+//   },
+// );
 
 const SetupWorkflowForm = CheckUser.addStep(
   Schema.slack.functions.OpenForm,
   {
     title: "Start a meeting",
     submit_label: "Submit",
-    interactivity: enumCheck.outputs.interactivity,
+    interactivity: CheckUser.inputs.interactivity,
     fields: {
       required: ["user"],
       elements: [

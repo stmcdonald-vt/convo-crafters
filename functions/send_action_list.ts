@@ -35,7 +35,7 @@ export default SlackFunction(
     if (action_items.length) {
       message += "*User Action List:*\n";
       message += action_items.map((item) =>
-        actionItemToMarkdownBullet(item.action, item.end_date)
+        actionItemToMarkdownBullet(item.name, item.end_date)
       ).join("\n");
     } else {
       message += "This user does not have any action items.";

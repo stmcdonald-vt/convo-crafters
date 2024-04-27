@@ -9,6 +9,9 @@ export const FetchUserActionItemsFunction = DefineFunction({
   source_file: "functions/fetch_action_items.ts",
   input_parameters: {
     properties: {
+      interactivity: {
+        type: Schema.slack.types.interactivity,
+      },
       user: {
         type: Schema.slack.types.user_id,
       },
@@ -35,11 +38,11 @@ export default SlackFunction(
   FetchUserActionItemsFunction,
   async ({ inputs, client }) => {
     const expressions = {
-      expression: "#user = :userId", // Logic to query for specific meeting
-      expression_attributes: { "#user": "assigned_to" }, // Map query to assigned_to field on action Item record
+      expression: "#user = :userID", // Logic to query for specific user
+      expression_attributes: { "#user": "assigned_to" }, // Map query to assigned_to field on Action Item record
       expression_values: {
-        ":userId": inputs.user,
-      }, // Map query to requested user id
+        ":userID": inputs.user,
+      }, // Map query to requested user ID
     };
 
     const response = await queryActionItemDatastore(client, expressions);
@@ -47,7 +50,7 @@ export default SlackFunction(
     if (!response.ok) {
       return {
         total: 0,
-        error: `Failed to fetch User Action Items: ${response.error}`,
+        error: `Failed to fetch Meeting Action Items: ${response.error}`,
       };
     }
 
@@ -56,16 +59,15 @@ export default SlackFunction(
       return {
         id: item.id,
         meeting_id: item.meeting_id,
-        assigned_to: item.assigned_to,
-        action: item.action,
-        status: item.status,
-        end_date: item.end_date,
+        name: item.name,
+        details: item.details,
       };
     });
 
     return {
       outputs: {
         action_items,
+        interactivity: inputs.interactivity,
       },
     };
   },

@@ -3,7 +3,7 @@ import CheckUser from "../workflows/check_user_action_list.ts";
 import { TriggerContextData, TriggerTypes } from "deno-slack-api/mod.ts";
 
 /**
- * This link trigger prompts the CreateMeeting workflow.
+ * This link trigger prompts the display action workflow.
  */
 const startMeetingTrigger: Trigger<typeof CheckUser.definition> = {
   type: TriggerTypes.Shortcut,
