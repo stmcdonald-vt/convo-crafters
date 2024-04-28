@@ -17,19 +17,18 @@ export const SendActionFunction = DefineFunction({
       channel: {
         type: Schema.slack.types.channel_id,
       },
-      thread_ts: {
-        type: Schema.slack.types.message_ts,
-        description: "optionally used to send message as a response",
+      user: {
+        type: Schema.slack.types.user_id,
       },
     },
-    required: ["action_items", "channel"],
+    required: ["action_items", "channel", "user"],
   },
 });
 
 export default SlackFunction(
   SendActionFunction,
   async ({ inputs, client }) => {
-    const { action_items, channel, thread_ts } = inputs;
+    const { action_items, channel, user } = inputs;
 
     let message = "";
     if (action_items.length) {
@@ -42,10 +41,10 @@ export default SlackFunction(
     }
 
     if (channel && message) {
-      await client.chat.postMessage({
-        channel,
+      await client.chat.postEphemeral({
+        channel: channel,
+        user: user,
         text: message,
-        thread_ts,
       });
     }
 
@@ -54,6 +53,5 @@ export default SlackFunction(
 );
 
 function actionItemToMarkdownBullet(action: string, end_date: number) {
-  // let item = `• ${action}; due: ${end_date}`;
   return `• ${action} | due: ${end_date}`;
 }

@@ -50,6 +50,7 @@ CheckUserAction.addStep(
   {
     action_items: FetchedActionItems.outputs.action_items,
     channel: CheckUserAction.outputs.channel_id,
+    user: SetupWorkflowForm.outputs.fields.user,
   },
 );
 
