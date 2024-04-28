@@ -1,15 +1,15 @@
 import { Trigger } from "deno-slack-api/types.ts";
-import CheckUser from "../workflows/check_user_action_list.ts";
+import CheckUserAction from "../workflows/check_user_action_list.ts";
 import { TriggerContextData, TriggerTypes } from "deno-slack-api/mod.ts";
 
 /**
  * This link trigger prompts the display action workflow.
  */
-const startMeetingTrigger: Trigger<typeof CheckUser.definition> = {
+const DisplayActionListTrigger: Trigger<typeof CheckUserAction.definition> = {
   type: TriggerTypes.Shortcut,
   name: "Display User Action List",
   description: "Display Action Items Assigned to User",
-  workflow: `#/workflows/${CheckUser.definition.callback_id}`,
+  workflow: `#/workflows/${CheckUserAction.definition.callback_id}`,
   inputs: {
     interactivity: {
       value: TriggerContextData.Shortcut.interactivity,
@@ -20,4 +20,4 @@ const startMeetingTrigger: Trigger<typeof CheckUser.definition> = {
   },
 };
 
-export default startMeetingTrigger;
+export default DisplayActionListTrigger;

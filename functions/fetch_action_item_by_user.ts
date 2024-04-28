@@ -6,7 +6,7 @@ export const FetchUserActionItemsFunction = DefineFunction({
   callback_id: "fetch_user_action_items",
   title: "Fetch Action Items for User",
   description: "Fetch action items",
-  source_file: "functions/fetch_action_items.ts",
+  source_file: "functions/fetch_action_item_by_user.ts",
   input_parameters: {
     properties: {
       interactivity: {
