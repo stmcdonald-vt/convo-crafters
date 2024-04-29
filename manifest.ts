@@ -2,7 +2,6 @@ import { Manifest } from "deno-slack-sdk/mod.ts";
 import { load } from "std/dotenv/mod.ts";
 
 // Datastores
-import SampleObjectDatastore from "./datastores/sample_datastore.ts";
 import { ActionListDatastore } from "./datastores/action_list_datastore.ts";
 import { AgendaItemDatastore } from "./datastores/agenda_item_datastore.ts";
 import { MeetingDatastore } from "./datastores/meeting_datastore.ts";
@@ -65,7 +64,6 @@ export default Manifest({
 
   // A list of all Datastores the app will use
   datastores: [
-    SampleObjectDatastore,
     ActionListDatastore,
     AgendaItemDatastore,
     RemindersDatastore,
