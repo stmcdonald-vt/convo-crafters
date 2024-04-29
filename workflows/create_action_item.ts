@@ -83,7 +83,7 @@ const SetupWorkflowForm = CreateActionItem.addStep(
 CreateActionItem.addStep(CreateActionItemSetupFunction, {
   meeting_id: SetupWorkflowForm.outputs.fields.meeting,
   assigned_to: SetupWorkflowForm.outputs.fields.assignment,
-  action: SetupWorkflowForm.outputs.fields.action,
+  name: SetupWorkflowForm.outputs.fields.action,
   details: SetupWorkflowForm.outputs.fields.details,
   end_date: SetupWorkflowForm.outputs.fields.date,
   interactivity: SetupWorkflowForm.outputs.interactivity,

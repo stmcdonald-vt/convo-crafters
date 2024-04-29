@@ -34,7 +34,7 @@ export default SlackFunction(
     if (action_items.length) {
       message += "*User Action List:*\n";
       message += action_items.map((item) =>
-        actionItemToMarkdownBullet(item.name, item.end_date)
+        actionItemToMarkdownBullet(item.name, item.end_date, item.details)
       ).join("\n");
     } else {
       message += "This user does not have any action items.";
@@ -52,6 +52,15 @@ export default SlackFunction(
   },
 );
 
-function actionItemToMarkdownBullet(action: string, end_date: number) {
-  return `• ${action} | due: ${end_date}`;
+function actionItemToMarkdownBullet(
+  action: string,
+  end_date: number,
+  details?: string,
+) {
+  const readableDeadline = new Date(end_date * 1000).toLocaleString();
+  let actionItem = `• ${action} | due: ${readableDeadline}`;
+  if (details) {
+    actionItem += `\n    • ${details}`;
+  }
+  return actionItem;
 }
