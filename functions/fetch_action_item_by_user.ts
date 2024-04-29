@@ -2,21 +2,21 @@ import { DefineFunction, Schema, SlackFunction } from "deno-slack-sdk/mod.ts";
 import { queryActionItemDatastore } from "../datastores/action_list_datastore.ts";
 import { ActionItemInfo } from "../types/action_item_info.ts";
 
-export const FetchActionItemsFunction = DefineFunction({
-  callback_id: "fetch_action_items_function",
-  title: "Fetch Meeting Action Items",
+export const FetchUserActionItemsFunction = DefineFunction({
+  callback_id: "fetch_user_action_items",
+  title: "Fetch Action Items for User",
   description: "Fetch action items",
-  source_file: "functions/fetch_action_items_by_meeting.ts",
+  source_file: "functions/fetch_action_item_by_user.ts",
   input_parameters: {
     properties: {
       interactivity: {
         type: Schema.slack.types.interactivity,
       },
-      meeting_id: {
-        type: Schema.types.string,
+      user: {
+        type: Schema.slack.types.user_id,
       },
     },
-    required: [],
+    required: ["user"],
   },
   output_parameters: {
     properties: {
@@ -35,14 +35,14 @@ export const FetchActionItemsFunction = DefineFunction({
 });
 
 export default SlackFunction(
-  FetchActionItemsFunction,
+  FetchUserActionItemsFunction,
   async ({ inputs, client }) => {
     const expressions = {
-      expression: "#meeting = :meetingId", // Logic to query for specific meeting
-      expression_attributes: { "#meeting": "meeting_id" }, // Map query to meeting_id field on Action Item record
+      expression: "#user = :userID", // Logic to query for specific user
+      expression_attributes: { "#user": "assigned_to" }, // Map query to assigned_to field on Action Item record
       expression_values: {
-        ":meetingId": inputs.meeting_id,
-      }, // Map query to requested meeting id
+        ":userID": inputs.user,
+      }, // Map query to requested user ID
     };
 
     const response = await queryActionItemDatastore(client, expressions);

@@ -7,6 +7,7 @@ import nextTopicTrigger from "../triggers/topic_trigger.ts";
 
 import { Trigger } from "../types/trigger.ts";
 import createActionItemTrigger from "../triggers/create_action_item_trigger.ts";
+import DisplayActionListTrigger from "../triggers/display_action_list.ts";
 
 const appTriggers = [
   createMeetingTrigger,
@@ -15,6 +16,7 @@ const appTriggers = [
   startMeetingTrigger,
   nextTopicTrigger,
   createActionItemTrigger,
+  DisplayActionListTrigger,
 ];
 
 export const GetOrCreateAppTriggers = DefineFunction({

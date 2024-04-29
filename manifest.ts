@@ -16,6 +16,7 @@ import { CreateAgendaItem } from "./workflows/create_agenda_item.ts";
 import { CreateActionItem } from "./workflows/create_action_item.ts";
 import { CreatePoll } from "./workflows/create_poll.ts";
 import { StartMeeting } from "./workflows/start_meeting.ts";
+import CheckUserAction from "./workflows/check_user_action_list.ts";
 import ConfigureTriggers from "./workflows/configure_triggers.ts";
 import CreateAgendaItemForMeeting from "./workflows/create_agenda_item_for_meeting.ts";
 import CreateActionItemForMeeting from "./workflows/create_action_item_for_meeting.ts";
@@ -57,6 +58,7 @@ export default Manifest({
     ConfigureTriggers,
     CreateActionItemForMeeting,
     CreateReminderForMeeting,
+    CheckUserAction,
   ],
 
   // If your app communicates to any external domains, list them here.
