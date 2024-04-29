@@ -42,6 +42,7 @@ const FetchedActionItems = CheckUserAction.addStep(
   FetchUserActionItemsFunction,
   {
     user: SetupWorkflowForm.outputs.fields.user,
+    interactivity: SetupWorkflowForm.outputs.interactivity,
   },
 );
 
@@ -49,8 +50,8 @@ CheckUserAction.addStep(
   SendActionFunction,
   {
     action_items: FetchedActionItems.outputs.action_items,
-    channel: CheckUserAction.outputs.channel_id,
-    user: SetupWorkflowForm.outputs.fields.user,
+    channel: CheckUserAction.inputs.channel,
+    user: CheckUserAction.inputs.interactivity.interactor.id,
   },
 );
 

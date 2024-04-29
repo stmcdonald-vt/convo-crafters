@@ -17,7 +17,7 @@ export const CreateActionItemSetupFunction = DefineFunction({
         type: Schema.slack.types.user_id,
         description: "The person this action item is assigned to.",
       },
-      action: {
+      name: {
         type: Schema.types.string,
         description: "The action required to be completed for this item.",
       },
@@ -33,7 +33,7 @@ export const CreateActionItemSetupFunction = DefineFunction({
         type: Schema.slack.types.interactivity,
       },
     },
-    required: ["assigned_to", "action", "details", "end_date"],
+    required: ["assigned_to", "name", "details", "end_date"],
   },
   output_parameters: {
     properties: {
@@ -51,7 +51,7 @@ export default SlackFunction(
     const {
       meeting_id,
       assigned_to,
-      action,
+      name,
       details,
       end_date,
       interactivity,
@@ -73,7 +73,7 @@ export default SlackFunction(
       client,
       assigned_to,
       end_date,
-      "Reminder to Complete Task: " + action,
+      "Reminder to Complete Task: " + name,
     );
     if (setupResponse.error) {
       return { error: `Failed to setup reminder: ${setupResponse.error}` };
@@ -90,12 +90,11 @@ export async function setupActionListReminder(
   message: string,
 ): Promise<{ ok: boolean; error?: string }> {
   try {
-    const result = await client.chat.scheduleMessage({
+    await client.chat.scheduleMessage({
       channel: channel,
       text: message,
       post_at: date,
     });
-    console.log(result);
     return { ok: true };
   } catch (error) {
     console.error(error);

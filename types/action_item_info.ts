@@ -18,6 +18,9 @@ export const ActionItemInfo = DefineType({
     details: {
       type: Schema.types.string,
     },
+    end_date: {
+      type: Schema.slack.types.timestamp,
+    },
   },
-  required: ["id", "meeting_id", "name", "details"],
+  required: ["id", "meeting_id", "name", "details", "end_date"],
 });

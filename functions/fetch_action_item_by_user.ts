@@ -61,6 +61,7 @@ export default SlackFunction(
         meeting_id: item.meeting_id,
         name: item.name,
         details: item.details,
+        end_date: item.end_date,
       };
     });
 
