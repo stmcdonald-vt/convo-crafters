@@ -101,5 +101,6 @@ export default Manifest({
     "triggers:read", // Read new Platform triggers
     "bookmarks:write",
     "channels:join",
+    "users:read", // Needed to get user's timezone
   ],
 });

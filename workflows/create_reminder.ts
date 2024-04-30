@@ -1,6 +1,7 @@
 import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateReminderSetupFunction } from "../functions/create_reminder.ts";
 import { FetchFutureMeetingsFunction } from "../functions/fetch_future_meetings.ts";
+import { GetUserTimezoneFunction } from "../functions/get_user_timezone.ts";
 
 export const CreateReminder = DefineWorkflow({
   callback_id: "create_reminder",
@@ -19,10 +20,21 @@ export const CreateReminder = DefineWorkflow({
   },
 });
 
+const timezoneCheck = CreateReminder.addStep(
+  GetUserTimezoneFunction,
+  {
+    user: CreateReminder.inputs.interactivity.interactor.id,
+    interactivity: CreateReminder.inputs.interactivity,
+  },
+);
+
 // Gather future meetings and pass through interactivity
 const futureMeetings = CreateReminder.addStep(
   FetchFutureMeetingsFunction,
-  { interactivity: CreateReminder.inputs.interactivity },
+  {
+    interactivity: timezoneCheck.outputs.interactivity,
+    timezone: timezoneCheck.outputs.timezone,
+  },
 );
 
 const SetupWorkflowForm = CreateReminder.addStep(

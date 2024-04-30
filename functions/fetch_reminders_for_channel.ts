@@ -15,6 +15,9 @@ export const FetchRemindersForChannelFunction = DefineFunction({
       channel: {
         type: Schema.slack.types.channel_id,
       },
+      timezone: {
+        type: Schema.types.string,
+      },
     },
     required: ["channel"],
   },
@@ -71,12 +74,19 @@ export default SlackFunction(
       };
     });
 
+    const localeOptions = inputs.timezone
+      ? { timeZone: inputs.timezone } as Intl.DateTimeFormatOptions
+      : undefined;
+
     const reminder_enum_choices = reminders.map((reminder) => {
       return {
         value: reminder.id,
         title: `${reminder.message} at ${
           // Timestamp is in seconds and Date needs ms
-          new Date(reminder.date * 1000).toLocaleString()}`,
+          new Date(reminder.date * 1000).toLocaleString(
+            "en-US",
+            localeOptions,
+          )}`,
       };
     });
 

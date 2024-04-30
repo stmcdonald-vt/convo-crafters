@@ -2,6 +2,7 @@ import { DefineWorkflow, Schema } from "deno-slack-sdk/mod.ts";
 import { CreateActionItemSetupFunction } from "../functions/create_action_item.ts";
 import { FetchPastMeetingsFunction } from "../functions/fetch_past_meetings.ts";
 import { AbortOnEmptyEnumFunction } from "../functions/abort_on_empty_enum.ts";
+import { GetUserTimezoneFunction } from "../functions/get_user_timezone.ts";
 
 export const CreateActionItem = DefineWorkflow({
   callback_id: "create_action_item",
@@ -20,10 +21,21 @@ export const CreateActionItem = DefineWorkflow({
   },
 });
 
+const timezoneCheck = CreateActionItem.addStep(
+  GetUserTimezoneFunction,
+  {
+    user: CreateActionItem.inputs.interactivity.interactor.id,
+    interactivity: CreateActionItem.inputs.interactivity,
+  },
+);
+
 // Gather past meetings and pass through interactivity
 const pastMeetings = CreateActionItem.addStep(
   FetchPastMeetingsFunction,
-  { interactivity: CreateActionItem.inputs.interactivity },
+  {
+    interactivity: timezoneCheck.outputs.interactivity,
+    timezone: timezoneCheck.outputs.timezone,
+  },
 );
 
 // Check if meetings exist or not
