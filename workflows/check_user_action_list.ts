@@ -31,7 +31,7 @@ const timezoneCheck = CheckUserAction.addStep(
 const SetupWorkflowForm = CheckUserAction.addStep(
   Schema.slack.functions.OpenForm,
   {
-    title: "Start a meeting",
+    title: "View a User's Action Items",
     submit_label: "Submit",
     interactivity: timezoneCheck.outputs.interactivity,
     fields: {
