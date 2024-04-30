@@ -61,6 +61,7 @@ CheckUserAction.addStep(
     action_items: FetchedActionItems.outputs.action_items,
     channel: CheckUserAction.inputs.channel,
     user: CheckUserAction.inputs.interactivity.interactor.id,
+    timezone: timezoneCheck.outputs.timezone,
   },
 );
 
