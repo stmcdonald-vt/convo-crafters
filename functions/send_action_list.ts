@@ -20,6 +20,9 @@ export const SendActionFunction = DefineFunction({
       user: {
         type: Schema.slack.types.user_id,
       },
+      timezone: {
+        type: Schema.types.string,
+      },
     },
     required: ["action_items", "channel", "user"],
   },
@@ -28,13 +31,18 @@ export const SendActionFunction = DefineFunction({
 export default SlackFunction(
   SendActionFunction,
   async ({ inputs, client }) => {
-    const { action_items, channel, user } = inputs;
+    const { action_items, channel, user, timezone } = inputs;
 
     let message = "";
     if (action_items.length) {
       message += "*User Action List:*\n";
       message += action_items.map((item) =>
-        actionItemToMarkdownBullet(item.name, item.end_date, item.details)
+        actionItemToMarkdownBullet(
+          item.name,
+          item.end_date,
+          item.details,
+          timezone,
+        )
       ).join("\n");
     } else {
       message += "This user does not have any action items.";
@@ -55,9 +63,17 @@ export default SlackFunction(
 function actionItemToMarkdownBullet(
   action: string,
   end_date: number,
+  timezone: string,
   details?: string,
 ) {
-  const readableDeadline = new Date(end_date * 1000).toLocaleString();
+  const localeOptions = timezone
+    ? { timeZone: timezone } as Intl.DateTimeFormatOptions
+    : undefined;
+
+  const readableDeadline = new Date(end_date * 1000).toLocaleString(
+    "en-US",
+    localeOptions,
+  );
   let actionItem = `• ${action} | due: ${readableDeadline}`;
   if (details) {
     actionItem += `\n    • ${details}`;

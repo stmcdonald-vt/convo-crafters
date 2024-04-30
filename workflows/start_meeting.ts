@@ -5,6 +5,8 @@ import { ChannelIdFromMeetingFunction } from "../functions/channel_id_from_meeti
 import { FetchMeetingAgendaItemsFunction } from "../functions/fetch_meeting_agenda_items.ts";
 import { SendAgendaFunction } from "../functions/send_agenda.ts";
 import { RequestActionItems } from "../functions/request_action_items.ts";
+import { GetUserTimezoneFunction } from "../functions/get_user_timezone.ts";
+
 export const StartMeeting = DefineWorkflow({
   callback_id: "start_meeting",
   title: "Start a Meeting",
@@ -22,10 +24,21 @@ export const StartMeeting = DefineWorkflow({
   },
 });
 
+const timezoneCheck = StartMeeting.addStep(
+  GetUserTimezoneFunction,
+  {
+    user: StartMeeting.inputs.interactivity.interactor.id,
+    interactivity: StartMeeting.inputs.interactivity,
+  },
+);
+
 // Gather future meetings and pass through interactivity
 const futureMeetings = StartMeeting.addStep(
   FetchFutureMeetingsFunction,
-  { interactivity: StartMeeting.inputs.interactivity },
+  {
+    interactivity: timezoneCheck.outputs.interactivity,
+    timezone: timezoneCheck.outputs.timezone,
+  },
 );
 
 const enumCheck = StartMeeting.addStep(

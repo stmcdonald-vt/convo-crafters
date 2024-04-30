@@ -13,6 +13,9 @@ export const FetchPastMeetingsFunction = DefineFunction({
       interactivity: {
         type: Schema.slack.types.interactivity,
       },
+      timezone: {
+        type: Schema.types.string,
+      },
     },
     required: [],
   },
@@ -79,12 +82,19 @@ export default SlackFunction(
       };
     });
 
+    const localeOptions = inputs.timezone
+      ? { timeZone: inputs.timezone } as Intl.DateTimeFormatOptions
+      : undefined;
+
     const meeting_enum_choices = sortedMeetings.map((meeting) => {
       return {
         value: meeting.id,
         title: `${meeting.name} at ${
           // Timestamp is in seconds and Date needs ms
-          new Date(meeting.timestamp * 1000).toLocaleString()}`,
+          new Date(meeting.timestamp * 1000).toLocaleString(
+            "en-US",
+            localeOptions,
+          )}`,
       };
     });
 

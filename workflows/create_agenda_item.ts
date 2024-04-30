@@ -3,6 +3,7 @@ import { CreateAgendaItemSetupFunction } from "../functions/create_agenda_item.t
 import { FetchFutureMeetingsFunction } from "../functions/fetch_future_meetings.ts";
 import { AbortOnEmptyEnumFunction } from "../functions/abort_on_empty_enum.ts";
 import { DialogType, ShowDialogFunction } from "../functions/show_dialog.ts";
+import { GetUserTimezoneFunction } from "../functions/get_user_timezone.ts";
 
 export const CreateAgendaItem = DefineWorkflow({
   callback_id: "create_agenda_item",
@@ -21,10 +22,21 @@ export const CreateAgendaItem = DefineWorkflow({
   },
 });
 
+const timezoneCheck = CreateAgendaItem.addStep(
+  GetUserTimezoneFunction,
+  {
+    user: CreateAgendaItem.inputs.interactivity.interactor.id,
+    interactivity: CreateAgendaItem.inputs.interactivity,
+  },
+);
+
 // Gather future meetings and pass through interactivity
 const futureMeetings = CreateAgendaItem.addStep(
   FetchFutureMeetingsFunction,
-  { interactivity: CreateAgendaItem.inputs.interactivity },
+  {
+    interactivity: timezoneCheck.outputs.interactivity,
+    timezone: timezoneCheck.outputs.timezone,
+  },
 );
 
 const enumCheck = CreateAgendaItem.addStep(
