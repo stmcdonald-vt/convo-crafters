@@ -40,8 +40,8 @@ export default SlackFunction(
         actionItemToMarkdownBullet(
           item.name,
           item.end_date,
-          item.details,
           timezone,
+          item.details,
         )
       ).join("\n");
     } else {
@@ -63,12 +63,14 @@ export default SlackFunction(
 function actionItemToMarkdownBullet(
   action: string,
   end_date: number,
-  timezone: string,
+  timezone?: string,
   details?: string,
 ) {
   const localeOptions = timezone
     ? { timeZone: timezone } as Intl.DateTimeFormatOptions
     : undefined;
+
+  console.log(localeOptions);
 
   const readableDeadline = new Date(end_date * 1000).toLocaleString(
     "en-US",
