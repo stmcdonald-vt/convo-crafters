@@ -69,9 +69,6 @@ function actionItemToMarkdownBullet(
   const localeOptions = timezone
     ? { timeZone: timezone } as Intl.DateTimeFormatOptions
     : undefined;
-
-  console.log(localeOptions);
-
   const readableDeadline = new Date(end_date * 1000).toLocaleString(
     "en-US",
     localeOptions,
