@@ -9,7 +9,7 @@ export default function timeOffRequestHeaderBlocks(inputs: any): any[] {
       type: "header",
       text: {
         type: "plain_text",
-        text: `A new request has been submitted`,
+        text: `A listener has requested to move on to the next topic.`,
       },
     },
     {
